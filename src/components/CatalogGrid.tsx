@@ -17,6 +17,9 @@ export default function CatalogGrid({
   const [selectedCategory, setSelectedCategory] = useState("Tutti");
 
   const filteredItems = config.catalog.items.filter((item) => {
+    if (item.visibilita === "CASSAFORTE" || item.visibilita === "NASCOSTO") {
+      return false;
+    }
     if (selectedCategory === "Tutti") return true;
     return item.category.toLowerCase() === selectedCategory.toLowerCase();
   });
@@ -89,7 +92,11 @@ export default function CatalogGrid({
                   <img
                     src={item.imageUrl}
                     alt={item.title}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover transition-transform duration-500"
+                    style={{
+                      objectPosition: `${item.posX ?? 50}% ${item.posY ?? 50}%`,
+                      transform: `scale(${item.zoom ?? 1})`,
+                    }}
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>

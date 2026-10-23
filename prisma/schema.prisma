@@ -42,18 +42,43 @@ model Impostazioni {
 
 model ProdottoCreazione {
   id                 String   @id @default(cuid())
+  codice             String?  @default("AUR-001")
   titolo             String
   categoria          String   @default("Creazioni")
   specifiche         String?  // es. "Oro Giallo 750‰ • Senza Saldature"
-  prezzo             Decimal?
+  prezzo             String?  @default("€ 450")
   mostraPrezzo       Boolean  @default(true) // Override locale prezzo
-  inEvidenza         Boolean  @default(false)// Compare nella ShowGallery
+  visibilita         String   @default("PUBBLICO") // "PUBBLICO" | "CASSAFORTE" | "NASCOSTO"
+  inEvidenza         Boolean  @default(false) // Compare nella ShowGallery
   ordineVetrina      Int      @default(0)
-  fotoPrincipale     String   // URL foto ad alta risoluzione
+  fotoPrincipale     String   // URL o DataURL WebP foto principale
   fotoStillLife      String?  @default("[]") // JSON array foto angolazioni secondarie
+  posX               Int      @default(50) // 0..100 (object-position X%)
+  posY               Int      @default(50) // 0..100 (object-position Y%)
+  zoom               Float    @default(1.0) // 1.0..2.0 (scale)
   disponibile        Boolean  @default(true)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+}
+
+model InvitoCassaforte {
+  id                   String   @id @default(cuid())
+  token                String   @unique
+  nomeDestinatario     String
+  whatsappDestinatario String?
+  pinAccesso           String?  // PIN opzionale es. "4829"
+  notaRiservata        String?
+  articoliIds          String   @default("[]") // JSON array di ID ProdottoCreazione (vuoto = tutti i pezzi CASSAFORTE)
+  mostraPrezzi         Boolean  @default(true)
+  vincolaDispositivo   Boolean  @default(true) // Se true, si lega al primo dispositivo che lo apre
+  deviceFingerprint    String?  // Hash dispositivo che ha aperto per primo il link
+  maxAperture          Int      @default(10) // 0 = illimitate entro scadenza
+  apertureEffettuate   Int      @default(0)
+  ultimoAccesso        DateTime?
+  scadenza             DateTime
+  attivo               Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }
 
 model PrenotazioneCamerino {

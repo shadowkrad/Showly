@@ -14,6 +14,8 @@ import {
   Gem,
   Clock,
   Sparkles,
+  Package,
+  Lock,
 } from "lucide-react";
 import UserSecurityModal from "@/components/UserSecurityModal";
 import { TaaaacLogo, ShowlyModuleIcon } from "@/components/common/TaaaacLogo";
@@ -48,6 +50,16 @@ export default function DashboardLayout({
       href: "/dashboard",
       label: "Camerino 24h & KPI",
       icon: LayoutDashboard,
+    },
+    {
+      href: "/dashboard/catalogo",
+      label: "Archivio Articoli & Foto",
+      icon: Package,
+    },
+    {
+      href: "/dashboard/cassaforte",
+      label: "Cassaforte Privata VIP",
+      icon: Lock,
     },
     {
       href: "/dashboard/studio",

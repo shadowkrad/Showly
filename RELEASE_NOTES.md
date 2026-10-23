@@ -18,7 +18,16 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - Desk di gestione ordini con badge di stato (`IN_ATTESA`, `PRONTO_IN_BOTTEGA`, `RITIRATO`, `SCADUTO`).
 - Notifica e sollecito rapido con 1-click su WhatsApp.
 
-### 3. Dashboard, Impostazioni & Live Showcase Studio Unificati
+### 3. Database Articoli con Mini-Editor Posizione Foto & Catalogo Privato "Cassaforte"
+- **Archivio Articoli & Mini-Editor Fotografico (`/dashboard/catalogo`)**:
+  - Database articoli dedicato (`ProdottoCreazione`) con codice, categoria, specifiche, prezzo, visibilità (*Vetrina Pubblica*, *Solo Cassaforte Privata*, *Nascosto*) e riordino rapido in vetrina (`↑` / `↓`).
+  - Caricamento diretto sia da **Smartphone** (scatto fotocamera dal vivo `capture="environment"`) sia da **PC / Galleria** con conversione automatica WebP HD.
+  - **Mini-Editor Visuale Posizione & Zoom Immagine**: trascinamento touch/mouse del punto focale (`posX%`, `posY%`) e regolazione zoom (`1.0x–2.0x`) con griglia dei terzi, anteprima commutabile *Quadrato 1:1* / *ShowGallery 16:11* e gestione ordine galleria multi-foto.
+- **Catalogo Privato "Cassaforte" Limitato al Destinatario (`/dashboard/cassaforte` & `/cassaforte/[token]`)**:
+  - Generazione di link privati personalizzati per singolo cliente o buyer (*es. `VIP-AURORA-2026`*) protetti da **PIN segreto**, **scadenza oraria**, **limite massimo di aperture** e **blocco automatico sul dispositivo del destinatario (`vincolaDispositivo`)** per impedire l'inoltro del catalogo a estranei.
+  - Invio 1-Click su WhatsApp con link e PIN precompilati, monitoraggio in tempo reale delle aperture effettuate e revoca immediata dell'accesso.
+
+### 4. Dashboard, Impostazioni & Live Showcase Studio Unificati
 - **Impostazioni Showly (`/dashboard/impostazioni`)**: layout standard Taaaac a 2 colonne con 6 sezioni verticali (*Bottega & Vetrina*, *Camerino 24h & Prezzi*, *Dominio & SSL*, *Email & Notifiche*, *Dispositivi PWA*, *Aspetto & Brand*).
 - **Hub Sincronizzazione Omnicanale v1.1.0**: sincronizzazione 1-Click degli orari della bottega con Google Maps, Meta (Facebook & IG), WhatsApp Business e Review Booster.
 - **Live Showcase Studio Split-Screen**: editor grafico in tempo reale con pannello sinistro di configurazione, upload immagini WebP e simulatore destro interattivo con switch tra Smartphone 390px e Desktop.

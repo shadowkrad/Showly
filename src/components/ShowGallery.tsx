@@ -138,7 +138,11 @@ export default function ShowGallery({
                   <img
                     src={slide.imageUrl}
                     alt={slide.title}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover transition-transform duration-500"
+                    style={{
+                      objectPosition: `${slide.posX ?? 50}% ${slide.posY ?? 50}%`,
+                      transform: `scale(${slide.zoom ?? 1})`,
+                    }}
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>

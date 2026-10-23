@@ -12,6 +12,8 @@ import {
   Settings,
   Sliders,
   Gem,
+  Package,
+  Lock,
 } from "lucide-react";
 
 interface Reservation {
@@ -108,10 +110,24 @@ export default function DashboardOverviewPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/dashboard/catalogo"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 text-amber-400 font-bold text-xs rounded-xl shadow-xs transition-all"
+          >
+            <Package className="w-4 h-4" />
+            <span>Archivio &amp; Foto</span>
+          </Link>
+          <Link
+            href="/dashboard/cassaforte"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs rounded-xl shadow-xs transition-all"
+          >
+            <Lock className="w-4 h-4 text-amber-600" />
+            <span>Cassaforte VIP</span>
+          </Link>
           <Link
             href="/dashboard/studio"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow-xs transition-all"
           >
             <Sliders className="w-4 h-4" />
             <span>Live Studio</span>
