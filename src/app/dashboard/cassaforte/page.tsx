@@ -204,7 +204,7 @@ export default function CassaforteManagerPage() {
               Cassaforte VIP &amp; Inviti Limitati al Destinatario
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-              Crea un catalogo segreto su misura per un singolo cliente o buyer: protetto da <strong>PIN personale</strong>, <strong>scadenza oraria</strong>, <strong>limite di aperture</strong> e <strong>blocco automatico sul dispositivo di chi lo riceve</strong> per impedire l&apos;inoltro a estranei.
+              Crea un catalogo segreto su misura per un singolo cliente o buyer: protetto da <strong>PIN personale</strong>, <strong>scadenza oraria</strong>, <strong>limite di aperture</strong>, <strong>blocco dispositivo anti-inoltro</strong> e <strong>Scudo Anti-Registrazione &amp; Anti-Salvataggio Foto</strong> (oscuramento automatico schermo + filigrana forense nominativa).
             </p>
           </div>
 

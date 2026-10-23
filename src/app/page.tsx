@@ -8,6 +8,7 @@ import AtelierSection from "@/components/AtelierSection";
 import ReserveModal from "@/components/ReserveModal";
 import Footer from "@/components/Footer";
 import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
+import { PhotoProtectionShield } from "@/components/PhotoProtectionShield";
 import { DEFAULT_SHOWLY_CONFIG, ShowlyConfig } from "@/lib/config";
 
 export default function HomePage() {
@@ -37,7 +38,14 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col bg-luxe-black text-luxe-light selection:bg-amber-400 selection:text-black overflow-x-hidden">
+    <PhotoProtectionShield
+      enabled={true}
+      strictFocusLock={false}
+      watermarkText={`${config.brand.name.toUpperCase()} • MODELLO PROTETTO`}
+      showWatermark={true}
+      showFloatingBadge={true}
+    >
+      <main className="min-h-screen flex flex-col bg-luxe-black text-luxe-light selection:bg-amber-400 selection:text-black overflow-x-hidden">
       {/* 1. Header Minimal Trasparente con Icona Modulo Showly & Lucchetto */}
       <Header config={config} onOpenReserve={handleOpenReserve} />
 
@@ -97,6 +105,7 @@ export default function HomePage() {
         config={config}
         preselectedTitle={selectedPieceTitle}
       />
-    </main>
+      </main>
+    </PhotoProtectionShield>
   );
 }

@@ -16,6 +16,10 @@ import {
 import { ShowlyModuleIcon } from "@/components/common/TaaaacLogo";
 import ReserveModal from "@/components/ReserveModal";
 import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
+import {
+  PhotoProtectionShield,
+  ProtectedModelImage,
+} from "@/components/PhotoProtectionShield";
 import { DEFAULT_SHOWLY_CONFIG } from "@/lib/config";
 import type { ArticoloDTO } from "@/app/api/catalogo/route";
 
@@ -236,9 +240,18 @@ export default function CassaforteClientePage({
     );
   }
 
-  // 3. Vista Principale della Cassaforte Sbloccata
+  // 3. Vista Principale della Cassaforte Sbloccata con Scudo Anti-Registrazione
   return (
-    <div className="min-h-screen bg-luxe-black text-luxe-light flex flex-col selection:bg-amber-400 selection:text-black">
+    <PhotoProtectionShield
+      enabled={true}
+      strictFocusLock={true}
+      watermarkText={`RISERVATO: ${
+        invito?.nomeDestinatario?.toUpperCase() || "OSPITE VIP"
+      } • #${invito?.token || token}`}
+      showWatermark={true}
+      showFloatingBadge={true}
+    >
+      <div className="min-h-screen bg-luxe-black text-luxe-light flex flex-col selection:bg-amber-400 selection:text-black">
       {/* Topbar Riservata */}
       <header className="sticky top-0 z-40 nav-glass border-b border-amber-400/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
@@ -332,7 +345,7 @@ export default function CassaforteClientePage({
                     className="group bg-luxe-card border border-amber-400/25 rounded-3xl overflow-hidden hover:border-amber-400/60 transition-all duration-300 flex flex-col shadow-2xl"
                   >
                     <div className="relative aspect-square overflow-hidden bg-black">
-                      <img
+                      <ProtectedModelImage
                         src={currentPhoto}
                         alt={item.titolo}
                         className="w-full h-full object-cover transition-transform duration-500"
@@ -344,6 +357,8 @@ export default function CassaforteClientePage({
                               }
                             : undefined
                         }
+                        forceWatermark={true}
+                        watermarkOverride={`RISERVATO: ${invito?.nomeDestinatario?.toUpperCase()} • ${item.codice}`}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
 
@@ -443,6 +458,7 @@ export default function CassaforteClientePage({
         config={DEFAULT_SHOWLY_CONFIG}
         preselectedTitle={selectedTitle}
       />
-    </div>
+      </div>
+    </PhotoProtectionShield>
   );
 }

@@ -26,6 +26,9 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - **Catalogo Privato "Cassaforte" Limitato al Destinatario (`/dashboard/cassaforte` & `/cassaforte/[token]`)**:
   - Generazione di link privati personalizzati per singolo cliente o buyer (*es. `VIP-AURORA-2026`*) protetti da **PIN segreto**, **scadenza oraria**, **limite massimo di aperture** e **blocco automatico sul dispositivo del destinatario (`vincolaDispositivo`)** per impedire l'inoltro del catalogo a estranei.
   - Invio 1-Click su WhatsApp con link e PIN precompilati, monitoraggio in tempo reale delle aperture effettuate e revoca immediata dell'accesso.
+- **Scudo Anti-Cattura, Anti-Registrazione & Anti-Salvataggio Modelli (`PhotoProtectionShield.tsx`)**:
+  - **Oscuramento Istantaneo contro Programmi di Registrazione & Cattura Schermo**: rilevamento automatico di tasti screenshot (`PrintScreen`, `Win+Shift+S`, `Cmd+Shift+3/4/5`), combinazioni di salvataggio/esportazione (`Ctrl+S`, `Ctrl+P`, `Ctrl+U`, `F12` / DevTools) e perdita di focus verso software di registrazione esterni (OBS, Snipping Tool, Screen Recorder), con attivazione immediata del sipario nero di sicurezza (`brightness-0 blur-3xl`) che oscura tutte le foto dei modelli.
+  - **Corazzatura Immagini & Filigrana Forense Nominativa (`ProtectedModelImage`)**: blocco nativo di tasto destro, trascinamento drag-and-drop e pressione prolungata su smartphone (*Salva in Foto*), velo trasparente intercettore e filigrana forense diagonale con il nome del destinatario e il codice dell'invito.
 
 ### 4. Dashboard, Impostazioni & Live Showcase Studio Unificati
 - **Impostazioni Showly (`/dashboard/impostazioni`)**: layout standard Taaaac a 2 colonne con 6 sezioni verticali (*Bottega & Vetrina*, *Camerino 24h & Prezzi*, *Dominio & SSL*, *Email & Notifiche*, *Dispositivi PWA*, *Aspetto & Brand*).

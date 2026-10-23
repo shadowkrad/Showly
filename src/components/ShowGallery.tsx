@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ShowlyConfig } from "@/lib/config";
+import { ProtectedModelImage } from "@/components/PhotoProtectionShield";
 
 interface ShowGalleryProps {
   config: ShowlyConfig;
@@ -133,9 +134,9 @@ export default function ShowGallery({
                     : "w-[82vw] max-w-[310px] sm:w-[380px] sm:max-w-none"
                 } group bg-luxe-card border border-white/10 rounded-2xl overflow-hidden hover:border-amber-400/40 transition-all duration-300 flex flex-col`}
               >
-                {/* Immagine Still-Life con Zoom */}
+                {/* Immagine Still-Life con Zoom e Scudo Anti-Cattura */}
                 <div className="relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden bg-black/40 image-zoom-container">
-                  <img
+                  <ProtectedModelImage
                     src={slide.imageUrl}
                     alt={slide.title}
                     className="w-full h-full object-cover transition-transform duration-500"
@@ -143,7 +144,6 @@ export default function ShowGallery({
                       objectPosition: `${slide.posX ?? 50}% ${slide.posY ?? 50}%`,
                       transform: `scale(${slide.zoom ?? 1})`,
                     }}
-                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
 

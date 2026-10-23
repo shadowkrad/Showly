@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ShowlyConfig } from "@/lib/config";
+import { ProtectedModelImage } from "@/components/PhotoProtectionShield";
 
 interface CatalogGridProps {
   config: ShowlyConfig;
@@ -89,7 +90,7 @@ export default function CatalogGrid({
                 className="group bg-luxe-card border border-white/10 rounded-2xl overflow-hidden hover:border-white/30 transition-all duration-300 flex flex-col"
               >
                 <div className="relative aspect-square overflow-hidden bg-black/40 image-zoom-container">
-                  <img
+                  <ProtectedModelImage
                     src={item.imageUrl}
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-500"
@@ -97,7 +98,6 @@ export default function CatalogGrid({
                       objectPosition: `${item.posX ?? 50}% ${item.posY ?? 50}%`,
                       transform: `scale(${item.zoom ?? 1})`,
                     }}
-                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
 
