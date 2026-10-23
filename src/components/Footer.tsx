@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ShowlyConfig } from "@/lib/config";
 
 interface FooterProps {
@@ -21,7 +20,7 @@ export default function Footer({ config }: FooterProps) {
           <span>{config.footer.legalText}</span>
         </div>
 
-        {/* Link GDPR & Lucchetto Amministrativo 🔒 Standard Taaaac */}
+        {/* Link GDPR */}
         <div className="flex items-center space-x-6">
           <a
             href="#"
@@ -29,15 +28,6 @@ export default function Footer({ config }: FooterProps) {
           >
             {config.footer.privacyPolicyLabel}
           </a>
-
-          <Link
-            href="/login"
-            className="inline-flex items-center space-x-1.5 text-luxe-sub/60 hover:text-amber-300 transition-colors group"
-            title="Accesso Area Riservata Esercente"
-          >
-            <span className="group-hover:scale-110 transition-transform">🔒</span>
-            <span>{config.footer.lockAdminLabel || "Area Riservata Esercente"}</span>
-          </Link>
         </div>
 
       </div>

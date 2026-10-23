@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Lock, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
+import { Lock, ArrowRight, ShieldCheck, AlertCircle, Sparkles } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,7 +14,50 @@ export default function LoginPage() {
   const [mfaToken, setMfaToken] = useState("");
   const [useBackupCode, setUseBackupCode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
+  const [isDemo, setIsDemo] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hn = window.location.hostname.toLowerCase();
+      const isDemoDomain =
+        hn.includes("vercel.app") ||
+        hn.includes("cliente-demo") ||
+        hn.includes("-demo") ||
+        hn.startsWith("demo.");
+
+      if (isDemoDomain) {
+        setIsDemo(true);
+      } else {
+        fetch("/api/auth/login")
+          .then((r) => r.json())
+          .then((d) => setIsDemo(Boolean(d.isDemo)))
+          .catch(() => setIsDemo(false));
+      }
+    }
+  }, []);
+
+  const handleDemoLogin = async () => {
+    setDemoLoading(true);
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ demo: true }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Errore durante l'accesso demo");
+      }
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err: any) {
+      setErrorMsg(err.message || "Errore accesso demo");
+      setDemoLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,6 +123,35 @@ export default function LoginPage() {
           <div className="mb-6 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center space-x-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{errorMsg}</span>
+          </div>
+        )}
+
+        {/* 1-Click Demo Box (Visibile SOLO su ambiente Demo Vercel / cliente-demo) */}
+        {isDemo && !mfaRequired && (
+          <div className="mb-6 p-4 rounded-2xl bg-amber-400/10 border border-amber-400/30 text-center space-y-2.5">
+            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-amber-300 uppercase tracking-wider">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span>Modalità Demo Attiva</span>
+            </div>
+            <p className="text-[11px] text-luxe-sub leading-relaxed">
+              Esplora il Desk &ldquo;Metti da Parte 24h&rdquo; e il Live Showcase Studio con un singolo click, senza inserire credenziali.
+            </p>
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              disabled={loading || demoLoading}
+              className="w-full py-3 px-4 bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              <span>{demoLoading ? "Accesso Demo in corso..." : "👉 Accedi alla Demo (1-Click)"}</span>
+            </button>
+
+            <div className="flex items-center gap-3 pt-2">
+              <div className="flex-1 h-px bg-white/10" />
+              <span className="text-[10px] font-bold text-luxe-sub/60 uppercase tracking-wider">
+                oppure con credenziali
+              </span>
+              <div className="flex-1 h-px bg-white/10" />
+            </div>
           </div>
         )}
 

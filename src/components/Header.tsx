@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Lock } from "lucide-react";
 import { ShowlyConfig } from "@/lib/config";
 
 interface HeaderProps {
@@ -40,8 +41,8 @@ export default function Header({ config, onOpenReserve }: HeaderProps) {
           </a>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex items-center space-x-4">
+        {/* Action Buttons & Lucchetto Area Riservata Esercente in Alto */}
+        <div className="flex items-center space-x-3 sm:space-x-4">
           <a
             href={`https://wa.me/${config.atelier.whatsappButtonText.replace(/[^0-9]/g, "") || "393400000000"}`}
             target="_blank"
@@ -52,10 +53,17 @@ export default function Header({ config, onOpenReserve }: HeaderProps) {
           </a>
           <button
             onClick={() => onOpenReserve()}
-            className="px-5 py-2.5 rounded-full bg-white hover:bg-amber-400 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 active:scale-95"
+            className="px-5 py-2.5 rounded-full bg-white hover:bg-amber-400 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer"
           >
             {config.navigation.ctaButtonLabel}
           </button>
+          <Link
+            href="/login"
+            className="p-2 rounded-full text-luxe-sub/70 hover:text-amber-300 hover:bg-white/10 transition-colors shrink-0"
+            title="Accesso Area Riservata Esercente"
+          >
+            <Lock className="w-4 h-4" />
+          </Link>
         </div>
 
       </div>

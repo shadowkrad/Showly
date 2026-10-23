@@ -15,13 +15,31 @@ import {
   logAccessAndCheckNewDevice,
 } from "@/lib/security";
 
+export async function GET(req: NextRequest) {
+  return NextResponse.json({
+    isDemo: isDemoEnvironment(req.headers.get("host")),
+  });
+}
+
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
   const userAgent = req.headers.get("user-agent") || null;
 
   try {
     const body = await req.json();
-    const { email, password, honeypot, mfaToken, isBackupCode } = body;
+    const { email, password, honeypot, mfaToken, isBackupCode, demo } = body;
+
+    // 0. Accesso Diretto 1-Click (SOLO ed esclusivamente per l'ambiente Demo Vercel / cliente-demo)
+    if (demo === true) {
+      if (!isDemoEnvironment(req.headers.get("host"))) {
+        return NextResponse.json(
+          { error: "Accesso rapido demo consentito solo sull'ambiente dimostrativo." },
+          { status: 403 }
+        );
+      }
+      await setAdminSession();
+      return NextResponse.json({ success: true, demo: true });
+    }
 
     // 1. Verifica Honeypot (bot trap)
     if (honeypot && honeypot.trim() !== "") {

@@ -26,4 +26,5 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - Rate limiting anti brute-force (blocco 15 min dopo 5 fallimenti consecutivi).
 - Protezione invisibile bot Honeypot.
 - Tracciamento dispositivi fidati e audit log accessi.
-- Lucchetto discreto 🔒 `/login` posizionato nel footer.
+- Lucchetto discreto d'accesso gestionale (`<Lock />`) posizionato nell'Header principale in alto a destra (allineato allo standard degli altri moduli Taaaac) e rimosso dal footer.
+- Accesso Diretto Demo 1-Click (`👉 Accedi alla Demo (1-Click)`) attivo esclusivamente sull'ambiente dimostrativo (`cliente-demo` / Vercel), con protezione middleware delle rotte `/dashboard` e richiesta obbligatoria di credenziali per i tenant reali in produzione.
