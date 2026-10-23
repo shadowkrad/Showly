@@ -25,7 +25,8 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 
 ### 4. Responsività Mobile Totale & Icona Ufficiale Personalizzata Showly
 - **Icona Standard Modulo Showly (`ShowlyModuleIcon` & `public/icon.svg`)**: grafica ufficiale su squircle Taaaac (sfondo onice/antracite con cornice oro champagne, diamante taglio brillante sfaccettato su piedistallo espositivo e scintilla d'autore) integrata nell'Header della vetrina pubblica, nel Footer, nella pagina di Login, nella Sidebar gestionale (`TaaaacLogo` + card Atelier) e negli asset PWA/Favicon (`icon.svg`, `apple-touch-icon.png`, `icons/icon-192.png`, `icons/icon-512.png`, `manifest.json`).
-- **Ottimizzazione Mobile & Simulatore 390px (`isMobilePreview`)**:
+- **Ottimizzazione Mobile, Pallino Flottante WhatsApp & Simulatore 390px (`isMobilePreview`)**:
+  - Sostituita la barra verde WhatsApp in fondo alla sezione Bottega con il **Pallino Flottante Standard WhatsApp (`FloatingWhatsAppWidget.tsx`)** in basso a destra con animazione pulse e tooltip *"Scrivici su WhatsApp 💎"*, allineato a tutti gli altri moduli della suite Taaaac.
   - Risolto il disallineamento nel simulatore smartphone 390px (in `Impostazioni -> Aspetto & Brand` e `Live Showcase Studio`) dove le media query desktop (`md:`, `sm:`, `lg:`) causavano l'andata a capo del titolo, la fuoriuscita orizzontale delle voci menu e la comparsa delle barre di scorrimento bianche di Windows.
   - Introdotto menu mobile hamburger a tendina (`Header.tsx`), card calibrate per schermi compatti (`ShowGallery.tsx`), griglia a colonna singola (`CatalogGrid.tsx`, `AtelierSection.tsx`) e rimozione totale dello scroll orizzontale (`overflow-x-hidden` con scrollbar sottile trasparente).
 

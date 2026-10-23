@@ -34,6 +34,7 @@ import ShowGallery from "@/components/ShowGallery";
 import CatalogGrid from "@/components/CatalogGrid";
 import AtelierSection from "@/components/AtelierSection";
 import Footer from "@/components/Footer";
+import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
 
 type SettingsTab = "bottega" | "camerino" | "dominio" | "email" | "dispositivi" | "aspetto";
 type StudioSubTab = "hero" | "showgallery" | "catalogo" | "atelier";
@@ -1723,6 +1724,11 @@ export default function ShowlyImpostazioniPage() {
                     <Footer
                       config={config}
                       isMobilePreview={simulatorMode === "mobile"}
+                    />
+                    <FloatingWhatsAppWidget
+                      phone={config.atelier.whatsappButtonText}
+                      brandName={config.brand.name}
+                      inSimulator={true}
                     />
                   </div>
                 </div>

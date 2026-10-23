@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Clock, MessageSquare, Compass } from "lucide-react";
+import { MapPin, Clock, Compass } from "lucide-react";
 import { ShowlyConfig } from "@/lib/config";
 
 interface AtelierSectionProps {
@@ -12,9 +12,6 @@ export default function AtelierSection({
   config,
   isMobilePreview = false,
 }: AtelierSectionProps) {
-  const cleanPhone =
-    config.atelier.whatsappButtonText.replace(/[^0-9]/g, "") || "393400000000";
-
   return (
     <section
       id="bottega"
@@ -94,34 +91,20 @@ export default function AtelierSection({
               </div>
             </div>
 
-            {/* Pulsanti Azione: Mappa & WhatsApp */}
-            <div
-              className={`flex gap-3 ${
-                isMobilePreview
-                  ? "flex-col items-stretch"
-                  : "flex-col sm:flex-row items-stretch sm:items-center"
-              }`}
-            >
+            {/* Pulsante Indicazioni Stradali Google Maps (WhatsApp è nel pallino flottante standard in basso a destra) */}
+            <div className="flex">
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                   config.atelier.addressText
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/30 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center space-x-2"
+                className={`${
+                  isMobilePreview ? "w-full" : "w-full sm:w-auto"
+                } px-6 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-amber-400/40 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white transition-all inline-flex items-center justify-center space-x-2`}
               >
                 <Compass className="w-4 h-4 text-amber-400 shrink-0" />
                 <span className="truncate">{config.atelier.directionsButtonText}</span>
-              </a>
-
-              <a
-                href={`https://wa.me/${cleanPhone}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-[11px] sm:text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-2 shadow-lg hover:scale-105 active:scale-95"
-              >
-                <MessageSquare className="w-4 h-4 shrink-0" />
-                <span className="truncate">{config.atelier.whatsappButtonText}</span>
               </a>
             </div>
           </div>

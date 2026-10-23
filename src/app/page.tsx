@@ -7,6 +7,7 @@ import CatalogGrid from "@/components/CatalogGrid";
 import AtelierSection from "@/components/AtelierSection";
 import ReserveModal from "@/components/ReserveModal";
 import Footer from "@/components/Footer";
+import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
 import { DEFAULT_SHOWLY_CONFIG, ShowlyConfig } from "@/lib/config";
 
 export default function HomePage() {
@@ -82,6 +83,12 @@ export default function HomePage() {
 
       {/* 6. Footer */}
       <Footer config={config} />
+
+      {/* Pallino Flottante Standard WhatsApp Taaaac */}
+      <FloatingWhatsAppWidget
+        phone={config.atelier.whatsappButtonText}
+        brandName={config.brand.name}
+      />
 
       {/* Modale "Metti da Parte" (Click & Reserve 24h) */}
       <ReserveModal

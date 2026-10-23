@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Lock, Menu, X, MessageCircle } from "lucide-react";
+import { Lock, Menu, X } from "lucide-react";
 import { ShowlyConfig } from "@/lib/config";
 import { ShowlyModuleIcon } from "@/components/common/TaaaacLogo";
 
@@ -18,8 +18,6 @@ export default function Header({
   isMobilePreview = false,
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const cleanPhone =
-    config.atelier.whatsappButtonText.replace(/[^0-9]/g, "") || "393400000000";
 
   return (
     <nav className="sticky top-0 z-50 nav-glass w-full">
@@ -41,7 +39,9 @@ export default function Header({
               src={config.brand.logoUrl}
               alt={config.brand.name}
               className={`${
-                isMobilePreview ? "h-8 max-w-[100px]" : "h-8 sm:h-10 max-w-[120px] sm:max-w-[160px]"
+                isMobilePreview
+                  ? "h-8 max-w-[100px]"
+                  : "h-8 sm:h-10 max-w-[120px] sm:max-w-[160px]"
               } object-contain rounded-xl shrink-0`}
             />
           ) : (
@@ -55,7 +55,9 @@ export default function Header({
             <div className="flex items-center gap-1.5">
               <span
                 className={`font-serif-luxury font-bold tracking-wider text-white uppercase group-hover:text-amber-300 transition-colors truncate block leading-tight ${
-                  isMobilePreview ? "text-base" : "text-base sm:text-2xl lg:text-3xl"
+                  isMobilePreview
+                    ? "text-base"
+                    : "text-base sm:text-2xl lg:text-3xl"
                 }`}
               >
                 {config.brand.name}
@@ -92,17 +94,6 @@ export default function Header({
 
         {/* Action Buttons & Lucchetto Area Riservata Esercente in Alto */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-          {!isMobilePreview && (
-            <a
-              href={`https://wa.me/${cleanPhone}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden xl:inline-flex text-xs text-luxe-sub hover:text-emerald-400 font-medium transition-colors"
-            >
-              {config.navigation.whatsappLabel}
-            </a>
-          )}
-
           <button
             onClick={() => onOpenReserve()}
             className={`rounded-full bg-white hover:bg-amber-400 text-black font-bold uppercase tracking-wider transition-all shadow-lg hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap ${
@@ -111,9 +102,7 @@ export default function Header({
                 : "px-3 sm:px-5 py-1.5 sm:py-2.5 text-[10px] sm:text-xs"
             }`}
           >
-            {isMobilePreview
-              ? "Prenota 24h"
-              : config.navigation.ctaButtonLabel}
+            {isMobilePreview ? "Prenota 24h" : config.navigation.ctaButtonLabel}
           </button>
 
           <Link
@@ -169,23 +158,14 @@ export default function Header({
             </a>
           </div>
 
-          <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-2">
-            <a
-              href={`https://wa.me/${cleanPhone}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 py-2.5 px-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center justify-center gap-1.5"
-            >
-              <MessageCircle className="w-3.5 h-3.5" />
-              <span>{config.navigation.whatsappLabel}</span>
-            </a>
+          <div className="pt-2 border-t border-white/10">
             <button
               type="button"
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenReserve();
               }}
-              className="flex-1 py-2.5 px-3 rounded-xl bg-amber-400 text-black text-xs font-bold uppercase tracking-wider"
+              className="w-full py-2.5 px-3 rounded-xl bg-amber-400 text-black text-xs font-bold uppercase tracking-wider"
             >
               {config.navigation.ctaButtonLabel}
             </button>

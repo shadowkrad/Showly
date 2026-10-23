@@ -17,6 +17,7 @@ import ShowGallery from "@/components/ShowGallery";
 import CatalogGrid from "@/components/CatalogGrid";
 import AtelierSection from "@/components/AtelierSection";
 import Footer from "@/components/Footer";
+import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
 
 export default function LiveShowcaseStudioPage() {
   const [config, setConfig] = useState<ShowlyConfig>(DEFAULT_SHOWLY_CONFIG);
@@ -378,6 +379,11 @@ export default function LiveShowcaseStudioPage() {
             <Footer
               config={config}
               isMobilePreview={simulatorMode === "mobile"}
+            />
+            <FloatingWhatsAppWidget
+              phone={config.atelier.whatsappButtonText}
+              brandName={config.brand.name}
+              inSimulator={true}
             />
           </div>
         </div>
