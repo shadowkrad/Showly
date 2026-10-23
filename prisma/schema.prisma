@@ -1,0 +1,95 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                  String          @id @default(cuid())
+  email               String          @unique
+  passwordHash        String
+  nome                String          @default("Esercente")
+  ruolo               String          @default("ESERCENTE") // "ESERCENTE" | "STAFF"
+  mustChangePassword  Boolean         @default(false)
+
+  // Hardening Sicurezza v1.0.6
+  mfaEnabled          Boolean         @default(false)
+  mfaSecret           String?         // Secret TOTP Base32 RFC 6238
+  mfaBackupCodes      String?         // JSON array con 8 codici hash-ati
+  failedLoginAttempts Int             @default(0)
+  lockedUntil         DateTime?
+  tokenVersion        Int             @default(1)
+
+  trustedDevices      TrustedDevice[]
+  accessLogs          AccessLog[]
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+}
+
+model Impostazioni {
+  id              String   @id @default("singleton")
+  nomeAttivita    String   @default("Atelier Aurora")
+  telefono        String?  @default("+39 0575 889211")
+  whatsappPhone   String?  @default("+39 340 000 0000")
+  indirizzo       String?  @default("Via del Corso 24, Arezzo")
+  mostraPrezzi    Boolean  @default(true) // Flag globale visibilità prezzi
+  showcaseConfig  String   @default("{}") // JSON ShowlyConfig 100% editabile
+  updatedAt       DateTime @updatedAt
+}
+
+model ProdottoCreazione {
+  id                 String   @id @default(cuid())
+  titolo             String
+  categoria          String   @default("Creazioni")
+  specifiche         String?  // es. "Oro Giallo 750‰ • Senza Saldature"
+  prezzo             Decimal?
+  mostraPrezzo       Boolean  @default(true) // Override locale prezzo
+  inEvidenza         Boolean  @default(false)// Compare nella ShowGallery
+  ordineVetrina      Int      @default(0)
+  fotoPrincipale     String   // URL foto ad alta risoluzione
+  fotoStillLife      String?  @default("[]") // JSON array foto angolazioni secondarie
+  disponibile        Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model PrenotazioneCamerino {
+  id            String   @id @default(cuid())
+  nomeCliente   String
+  whatsapp      String
+  titoloPezzo   String
+  specifica     String?
+  prezzo        String?
+  stato         String   @default("IN_ATTESA") // "IN_ATTESA" | "PRONTO" | "RITIRATO" | "SCADUTO"
+  note          String?
+  dataScadenza  DateTime // Creato automaticamente a now() + 24 ore
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model TrustedDevice {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceHash   String   // Hash fingerprint browser/dispositivo
+  deviceName   String   // es. "iPhone 15 • Safari" o "Windows • Chrome"
+  ipAddress    String
+  lastUsedAt   DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  @@unique([userId, deviceHash])
+}
+
+model AccessLog {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  evento       String   // "LOGIN_SUCCESS", "LOGIN_FAILED", "MFA_CHALLENGE", "MFA_SUCCESS", "LOGOUT"
+  ipAddress    String
+  userAgent    String?
+  isNewDevice  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}

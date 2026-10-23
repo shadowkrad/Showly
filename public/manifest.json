@@ -1,0 +1,17 @@
+{
+  "name": "Showly — Vetrina d'Autore",
+  "short_name": "Showly",
+  "description": "Vetrina dinamica per oreficerie, boutique e showroom d'alta gamma",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0C",
+  "theme_color": "#0A0A0C",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

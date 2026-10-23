@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #0A0A0C;
+    color: #F8F9FA;
+    font-family: var(--font-sans, "Plus Jakarta Sans", sans-serif);
+    overflow-x: hidden;
+  }
+}
+
+.font-serif-luxury {
+  font-family: var(--font-serif, "Cormorant Garamond", Georgia, serif);
+}
+
+/* Glassmorphism frosted navbar */
+.nav-glass {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  background: rgba(10, 10, 12, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Apple-style horizontal scroll-snap showgallery */
+.showgallery-slider {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.showgallery-card {
+  scroll-snap-align: center;
+}
+
+.image-zoom-container img {
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.image-zoom-container:hover img {
+  transform: scale(1.04);
+}
