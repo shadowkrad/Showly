@@ -6,11 +6,10 @@ import {
   Laptop,
   Save,
   RefreshCw,
-  Sparkles,
   Sliders,
-  DollarSign,
   CheckCircle2,
-  ExternalLink,
+  Plus,
+  Trash2,
 } from "lucide-react";
 import { DEFAULT_SHOWLY_CONFIG, ShowlyConfig } from "@/lib/config";
 import Header from "@/components/Header";
@@ -59,31 +58,32 @@ export default function LiveShowcaseStudioPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-screen overflow-hidden">
-      
-      {/* Top Bar Studio */}
-      <div className="h-16 bg-luxe-card border-b border-white/10 px-6 flex items-center justify-between shrink-0">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 rounded-lg bg-amber-400 text-black flex items-center justify-center font-bold">
-            <Sliders className="w-4 h-4" />
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+      {/* Intestazione Principale Standard Taaaac */}
+      <div className="bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-semibold text-amber-600 uppercase tracking-wider mb-1">
+            <span>💎 Bottega d&apos;Autore &amp; Showroom</span>
+            <span>•</span>
+            <span>Editor Visivo Split-Screen</span>
           </div>
-          <div>
-            <h1 className="text-sm font-bold text-white uppercase tracking-wider">
-              Live Showcase Studio (Split-Screen)
-            </h1>
-            <p className="text-[10px] text-luxe-sub">Personalizza ogni aspetto visivo e testalo in tempo reale</p>
-          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+            <Sliders className="w-7 h-7 text-amber-500" />
+            Live Showcase Studio
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Personalizza ogni testo, prezzo, collezione e immagine della vetrina con anteprima istantanea.
+          </p>
         </div>
 
-        {/* Switch Simulatore & Azioni */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center bg-black/50 border border-white/10 rounded-xl p-1">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1">
             <button
               onClick={() => setSimulatorMode("mobile")}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 simulatorMode === "mobile"
-                  ? "bg-amber-400 text-black shadow-sm font-bold"
-                  : "text-luxe-sub hover:text-white"
+                  ? "bg-white text-slate-900 shadow-2xs"
+                  : "text-slate-500 hover:text-slate-800"
               }`}
               title="Simulatore Smartphone 390px"
             >
@@ -92,10 +92,10 @@ export default function LiveShowcaseStudioPage() {
             </button>
             <button
               onClick={() => setSimulatorMode("desktop")}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 simulatorMode === "desktop"
-                  ? "bg-amber-400 text-black shadow-sm font-bold"
-                  : "text-luxe-sub hover:text-white"
+                  ? "bg-white text-slate-900 shadow-2xs"
+                  : "text-slate-500 hover:text-slate-800"
               }`}
               title="Simulatore Desktop Esteso"
             >
@@ -107,108 +107,48 @@ export default function LiveShowcaseStudioPage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center space-x-2 disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm transition-all shadow-xs flex items-center gap-2 disabled:opacity-50 cursor-pointer"
           >
-            {saving ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+            {saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
             <span>{saving ? "Salvataggio..." : "Salva Vetrina Live"}</span>
           </button>
         </div>
       </div>
 
-      {/* Split-Screen: Sinistra Controlli (45%) | Destra Simulatore (55%) */}
-      <div className="flex-1 flex overflow-hidden">
-        
-        {/* PANNELLO CONTROLLI SINISTRA */}
-        <div className="w-full lg:w-[45%] border-r border-white/10 overflow-y-auto p-6 space-y-8 bg-[#0E1015]/90">
-          
-          {saveSuccess && (
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs flex items-center space-x-2 animate-in fade-in">
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
-              <span>Vetrina aggiornata e salvata con successo!</span>
-            </div>
-          )}
+      {saveSuccess && (
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+          <span>Modifiche salvate e pubblicate con successo sulla vetrina live!</span>
+        </div>
+      )}
 
-          {/* 1. Brand & Identità */}
-          <section className="space-y-4 bg-luxe-card border border-white/10 rounded-2xl p-6">
-            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest flex items-center space-x-2">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>1. Identità & Brand</span>
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <label className="text-[11px] font-semibold text-luxe-sub block mb-1">
-                  Nome Bottega / Marchio
-                </label>
+      {/* Split-Screen: Sinistra Controlli (5/12) | Destra Simulatore (7/12) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* COLONNA SINISTRA: CONTROLLI */}
+        <div className="lg:col-span-5 space-y-5 max-h-[780px] overflow-y-auto pr-1">
+          {/* 1. Politica Prezzi */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-amber-600 font-black text-xs uppercase tracking-wider">
+                <span>💰 Politica Visibilità Prezzi</span>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
                 <input
-                  type="text"
-                  value={config.brand.name}
+                  type="checkbox"
+                  checked={config.pricing.showPricesGlobally}
                   onChange={(e) =>
                     setConfig({
                       ...config,
-                      brand: { ...config.brand, name: e.target.value },
+                      pricing: { ...config.pricing, showPricesGlobally: e.target.checked },
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none focus:border-amber-400"
+                  className="w-5 h-5 accent-amber-500 rounded cursor-pointer"
                 />
-              </div>
-
-              <div>
-                <label className="text-[11px] font-semibold text-luxe-sub block mb-1">
-                  Payoff / Descrizione Breve
-                </label>
-                <input
-                  type="text"
-                  value={config.brand.tagline}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      brand: { ...config.brand, tagline: e.target.value },
-                    })
-                  }
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none focus:border-amber-400"
-                />
-              </div>
+              </label>
             </div>
-          </section>
-
-          {/* 2. Politica Prezzi (Flag Globale & Testo di Riserva) */}
-          <section className="space-y-4 bg-luxe-card border border-white/10 rounded-2xl p-6">
-            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest flex items-center space-x-2">
-              <DollarSign className="w-3.5 h-3.5" />
-              <span>2. Politica Prezzi al Pubblico</span>
-            </h3>
-            
-            <div className="flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/10">
-              <div>
-                <span className="text-xs font-bold text-white block">Mostra Prezzi al Pubblico</span>
-                <span className="text-[11px] text-luxe-sub">
-                  Se disattivato, tutti i prezzi vengono nascosti nella vetrina.
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() =>
-                  setConfig({
-                    ...config,
-                    pricing: {
-                      ...config.pricing,
-                      showPricesGlobally: !config.pricing.showPricesGlobally,
-                    },
-                  })
-                }
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  config.pricing.showPricesGlobally
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                    : "bg-white/10 text-luxe-sub border border-white/15"
-                }`}
-              >
-                {config.pricing.showPricesGlobally ? "VISIBILI (ON)" : "NASCOSTI (OFF)"}
-              </button>
-            </div>
-
             <div>
-              <label className="text-[11px] font-semibold text-luxe-sub block mb-1">
-                Testo Alternativo Quando i Prezzi Sono Nascosti
+              <label className="text-xs font-semibold text-slate-700 block mb-1">
+                Testo Fallback se Prezzo Nascosto
               </label>
               <input
                 type="text"
@@ -216,211 +156,208 @@ export default function LiveShowcaseStudioPage() {
                 onChange={(e) =>
                   setConfig({
                     ...config,
-                    pricing: {
-                      ...config.pricing,
-                      hiddenPriceFallbackText: e.target.value,
+                    pricing: { ...config.pricing, hiddenPriceFallbackText: e.target.value },
+                  })
+                }
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm"
+              />
+            </div>
+          </div>
+
+          {/* 2. Identità Brand & Hero */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-4">
+            <h3 className="text-xs font-black uppercase tracking-wider text-amber-600">
+              1. Identità Brand &amp; Hero Still-Life
+            </h3>
+            <div>
+              <label className="text-xs font-semibold text-slate-700 block mb-1">
+                Nome Bottega / Atelier
+              </label>
+              <input
+                type="text"
+                value={config.brand.name}
+                onChange={(e) =>
+                  setConfig({ ...config, brand: { ...config.brand, name: e.target.value } })
+                }
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-slate-700 block mb-1">
+                Occhiello Hero
+              </label>
+              <input
+                type="text"
+                value={config.hero.tagText}
+                onChange={(e) =>
+                  setConfig({ ...config, hero: { ...config.hero, tagText: e.target.value } })
+                }
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-slate-700 block mb-1">
+                Titolo Principale Hero
+              </label>
+              <input
+                type="text"
+                value={config.hero.headline}
+                onChange={(e) =>
+                  setConfig({ ...config, hero: { ...config.hero, headline: e.target.value } })
+                }
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-slate-700 block mb-1">
+                URL Immagine Hero
+              </label>
+              <input
+                type="text"
+                value={config.hero.imageUrl}
+                onChange={(e) =>
+                  setConfig({ ...config, hero: { ...config.hero, imageUrl: e.target.value } })
+                }
+                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono"
+              />
+            </div>
+          </div>
+
+          {/* 3. ShowGallery */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-black uppercase tracking-wider text-amber-600">
+                2. ShowGallery Stile Apple ({config.showgallery.slides.length})
+              </h3>
+              <button
+                type="button"
+                onClick={() =>
+                  setConfig({
+                    ...config,
+                    showgallery: {
+                      ...config.showgallery,
+                      slides: [
+                        ...config.showgallery.slides,
+                        {
+                          id: `slide-${Date.now()}`,
+                          title: "Nuovo Pezzo Iconico",
+                          specs: "Manifattura Artigianale",
+                          price: "€ 950",
+                          imageUrl:
+                            "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=90",
+                          ctaText: "Metti da Parte (24h) →",
+                        },
+                      ],
                     },
                   })
                 }
-                className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none focus:border-amber-400"
+                className="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 text-xs font-bold flex items-center gap-1 cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" /> Aggiungi
+              </button>
+            </div>
+
+            {config.showgallery.slides.map((slide, idx) => (
+              <div
+                key={slide.id}
+                className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-slate-500">Slide #{idx + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const next = config.showgallery.slides.filter((_, i) => i !== idx);
+                      setConfig({
+                        ...config,
+                        showgallery: { ...config.showgallery, slides: next },
+                      });
+                    }}
+                    className="text-rose-500 hover:text-rose-700 p-1 cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  value={slide.title}
+                  onChange={(e) => {
+                    const next = [...config.showgallery.slides];
+                    next[idx] = { ...next[idx], title: e.target.value };
+                    setConfig({
+                      ...config,
+                      showgallery: { ...config.showgallery, slides: next },
+                    });
+                  }}
+                  className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-xs font-semibold"
+                />
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    value={slide.price}
+                    onChange={(e) => {
+                      const next = [...config.showgallery.slides];
+                      next[idx] = { ...next[idx], price: e.target.value };
+                      setConfig({
+                        ...config,
+                        showgallery: { ...config.showgallery, slides: next },
+                      });
+                    }}
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-xs"
+                  />
+                  <input
+                    type="text"
+                    value={slide.specs}
+                    onChange={(e) => {
+                      const next = [...config.showgallery.slides];
+                      next[idx] = { ...next[idx], specs: e.target.value };
+                      setConfig({
+                        ...config,
+                        showgallery: { ...config.showgallery, slides: next },
+                      });
+                    }}
+                    className="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-xs"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* COLONNA DESTRA: SIMULATORE LIVE */}
+        <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-6 flex items-center justify-center overflow-hidden">
+          <div
+            className={`bg-luxe-black text-luxe-light overflow-y-auto transition-all duration-300 shadow-2xl ${
+              simulatorMode === "mobile"
+                ? "w-[390px] h-[720px] rounded-[42px] border-[8px] border-neutral-800"
+                : "w-full h-[720px] rounded-2xl border border-white/15"
+            }`}
+          >
+            <Header config={config} onOpenReserve={() => {}} />
+            <section className="relative h-[340px] flex items-center justify-center overflow-hidden">
+              <img
+                src={config.hero.imageUrl}
+                alt="Hero Preview"
+                className="absolute inset-0 w-full h-full object-cover scale-105 brightness-75"
               />
-            </div>
-          </section>
-
-          {/* 3. Hero di Campagna */}
-          <section className="space-y-4 bg-luxe-card border border-white/10 rounded-2xl p-6">
-            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest">
-              3. Hero di Campagna
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <label className="text-[11px] font-semibold text-luxe-sub block mb-1">
-                  Tag Sopratitolo
-                </label>
-                <input
-                  type="text"
-                  value={config.hero.tagText}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      hero: { ...config.hero, tagText: e.target.value },
-                    })
-                  }
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none focus:border-amber-400"
+              <div className="absolute inset-0 hero-vignette"></div>
+              <div className="relative z-10 max-w-2xl mx-auto px-4 text-center space-y-3">
+                <span className="inline-block px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[9px] uppercase tracking-[0.2em] text-amber-300 font-semibold">
+                  {config.hero.tagText}
+                </span>
+                <h2
+                  className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white leading-tight"
+                  dangerouslySetInnerHTML={{ __html: config.hero.headline }}
                 />
               </div>
-
-              <div>
-                <label className="text-[11px] font-semibold text-luxe-sub block mb-1">
-                  Titolo Principale (Supporta &lt;br/&gt;)
-                </label>
-                <input
-                  type="text"
-                  value={config.hero.headline}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      hero: { ...config.hero, headline: e.target.value },
-                    })
-                  }
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none focus:border-amber-400"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] font-semibold text-luxe-sub block mb-1">
-                  URL Foto Copertina (Alta Risoluzione)
-                </label>
-                <input
-                  type="text"
-                  value={config.hero.imageUrl}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      hero: { ...config.hero, imageUrl: e.target.value },
-                    })
-                  }
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs font-mono focus:outline-none focus:border-amber-400"
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* 4. Orari & Bottega */}
-          <section className="space-y-4 bg-luxe-card border border-white/10 rounded-2xl p-6">
-            <h3 className="text-xs font-bold text-amber-400 uppercase tracking-widest">
-              4. Bottega & Orari
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <label className="text-[11px] font-semibold text-luxe-sub block mb-1">
-                  Indirizzo Bottega
-                </label>
-                <input
-                  type="text"
-                  value={config.atelier.addressText}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      atelier: { ...config.atelier, addressText: e.target.value },
-                    })
-                  }
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none focus:border-amber-400"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] font-semibold text-luxe-sub block mb-1">
-                  Orario Feriale (Lun – Ven)
-                </label>
-                <input
-                  type="text"
-                  value={config.atelier.hoursWeekdayText}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      atelier: { ...config.atelier, hoursWeekdayText: e.target.value },
-                    })
-                  }
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none focus:border-amber-400"
-                />
-              </div>
-
-              <div>
-                <label className="text-[11px] font-semibold text-luxe-sub block mb-1">
-                  Stato In Tempo Reale (Badge Verde)
-                </label>
-                <input
-                  type="text"
-                  value={config.atelier.statusLiveText}
-                  onChange={(e) =>
-                    setConfig({
-                      ...config,
-                      atelier: { ...config.atelier, statusLiveText: e.target.value },
-                    })
-                  }
-                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-white/15 text-white text-xs focus:outline-none focus:border-amber-400"
-                />
-              </div>
-            </div>
-          </section>
-
+            </section>
+            <ShowGallery config={config} onOpenReserve={() => {}} />
+            <CatalogGrid config={config} onOpenReserve={() => {}} />
+            <AtelierSection config={config} />
+            <Footer config={config} />
+          </div>
         </div>
-
-        {/* PANNELLO SIMULATORE DESTRA */}
-        <div className="w-full lg:w-[55%] bg-[#08080A] flex items-center justify-center p-6 overflow-hidden relative">
-          
-          {simulatorMode === "mobile" ? (
-            /* Simulatore Smartphone 390px */
-            <div className="w-[390px] h-[780px] bg-black rounded-[48px] border-[10px] border-zinc-800 shadow-2xl overflow-hidden flex flex-col relative scale-[0.88] 2xl:scale-100 transition-all">
-              {/* Dynamic Island / Notch */}
-              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-28 h-6 bg-zinc-900 rounded-full z-50 flex items-center justify-center">
-                <span className="w-2.5 h-2.5 rounded-full bg-black"></span>
-              </div>
-
-              {/* Contenuto scrollabile del telefono */}
-              <div className="flex-1 overflow-y-auto no-scrollbar pt-6 bg-luxe-black">
-                <Header config={config} onOpenReserve={() => {}} />
-                
-                {/* Hero Mobile */}
-                <div className="relative min-h-[480px] flex items-end pb-12 px-5">
-                  <img
-                    src={config.hero.imageUrl}
-                    alt="Hero"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-luxe-black via-luxe-black/30 to-black/20"></div>
-                  <div className="relative z-10">
-                    <span className="text-[10px] uppercase font-bold text-amber-300 tracking-widest block mb-1">
-                      {config.hero.tagText}
-                    </span>
-                    <h2
-                      className="font-serif-luxury text-3xl font-bold text-white leading-tight"
-                      dangerouslySetInnerHTML={{ __html: config.hero.headline }}
-                    />
-                  </div>
-                </div>
-
-                <ShowGallery config={config} onOpenReserve={() => {}} />
-                <CatalogGrid config={config} onOpenReserve={() => {}} />
-                <AtelierSection config={config} />
-                <Footer config={config} />
-              </div>
-            </div>
-          ) : (
-            /* Simulatore Desktop Full */
-            <div className="w-full h-full bg-luxe-black rounded-2xl border border-white/10 shadow-2xl overflow-y-auto no-scrollbar">
-              <Header config={config} onOpenReserve={() => {}} />
-              
-              <div className="relative min-h-[600px] flex items-end pb-16 px-8">
-                <img
-                  src={config.hero.imageUrl}
-                  alt="Hero"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-luxe-black via-luxe-black/30 to-black/20"></div>
-                <div className="relative z-10 max-w-2xl">
-                  <span className="text-xs uppercase font-bold text-amber-300 tracking-widest block mb-1">
-                    {config.hero.tagText}
-                  </span>
-                  <h2
-                    className="font-serif-luxury text-5xl font-bold text-white leading-tight"
-                    dangerouslySetInnerHTML={{ __html: config.hero.headline }}
-                  />
-                </div>
-              </div>
-
-              <ShowGallery config={config} onOpenReserve={() => {}} />
-              <CatalogGrid config={config} onOpenReserve={() => {}} />
-              <AtelierSection config={config} />
-              <Footer config={config} />
-            </div>
-          )}
-
-        </div>
-
       </div>
-
     </div>
   );
 }

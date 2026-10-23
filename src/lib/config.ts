@@ -3,7 +3,17 @@ export interface ShowlyConfig {
     name: string;
     tagline: string;
     logoUrl?: string | null;
+    faviconUrl?: string | null;
     accentColor: string;
+  };
+  business?: {
+    ragioneSociale: string;
+    partitaIva: string;
+    titolare: string;
+    emailContatto: string;
+    telefono: string;
+    ritiroInBottega24h: boolean;
+    notificaNuovePrenotazioni: boolean;
   };
   pricing: {
     showPricesGlobally: boolean;
@@ -82,7 +92,18 @@ export const DEFAULT_SHOWLY_CONFIG: ShowlyConfig = {
   brand: {
     name: "Atelier Aurora",
     tagline: "Bottega Orafa & Manifattura d'Autore",
+    logoUrl: null,
+    faviconUrl: null,
     accentColor: "#D4AF37",
+  },
+  business: {
+    ragioneSociale: "Atelier Aurora S.r.l.",
+    partitaIva: "01928374652",
+    titolare: "Aurora Moretti",
+    emailContatto: "info@atelieraurora.it",
+    telefono: "+39 0575 889211",
+    ritiroInBottega24h: true,
+    notificaNuovePrenotazioni: true,
   },
   pricing: {
     showPricesGlobally: true,

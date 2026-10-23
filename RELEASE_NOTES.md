@@ -18,8 +18,10 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - Desk di gestione ordini con badge di stato (`IN_ATTESA`, `PRONTO_IN_BOTTEGA`, `RITIRATO`, `SCADUTO`).
 - Notifica e sollecito rapido con 1-click su WhatsApp.
 
-### 3. Live Showcase Studio Split-Screen
-- Editor grafico in tempo reale con pannello sinistro di configurazione e simulatore destro interattivo con switch tra Smartphone 390px e Desktop.
+### 3. Dashboard, Impostazioni & Live Showcase Studio Unificati
+- **Impostazioni Showly (`/dashboard/impostazioni`)**: layout standard Taaaac a 2 colonne con 6 sezioni verticali (*Bottega & Vetrina*, *Camerino 24h & Prezzi*, *Dominio & SSL*, *Email & Notifiche*, *Dispositivi PWA*, *Aspetto & Brand*).
+- **Hub Sincronizzazione Omnicanale v1.1.0**: sincronizzazione 1-Click degli orari della bottega con Google Maps, Meta (Facebook & IG), WhatsApp Business e Review Booster.
+- **Live Showcase Studio Split-Screen**: editor grafico in tempo reale con pannello sinistro di configurazione, upload immagini WebP e simulatore destro interattivo con switch tra Smartphone 390px e Desktop.
 
 ### 4. Pacchetto Sicurezza Integrato (v1.0.6)
 - Autenticazione a due fattori (TOTP MFA RFC 6238) con QR code e 8 codici di emergenza.

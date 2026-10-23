@@ -1,15 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Clock,
   CheckCircle2,
   AlertCircle,
   MessageSquare,
   Sparkles,
-  ChevronRight,
   Search,
-  Filter,
+  Settings,
+  Sliders,
+  Gem,
 } from "lucide-react";
 
 interface Reservation {
@@ -67,9 +69,9 @@ export default function DashboardOverviewPage() {
 
   const handleOpenWhatsAppChat = (r: Reservation) => {
     const cleanPhone = r.whatsapp.replace(/[^0-9]/g, "");
-    let msg = `Salve ${r.nomeCliente}! Ti contattiamo da Atelier Aurora in merito al pezzo ${r.titoloPezzo} che hai riservato.`;
+    let msg = `Salve ${r.nomeCliente}! Ti contattiamo da Atelier Aurora in merito alla creazione "${r.titoloPezzo}" che hai riservato.`;
     if (r.stato === "PRONTO") {
-      msg = `Salve ${r.nomeCliente}! Il pezzo ${r.titoloPezzo} è pronto in bottega ad Arezzo per la tua prova esclusiva. Ti aspettiamo!`;
+      msg = `Salve ${r.nomeCliente}! La creazione "${r.titoloPezzo}" è pronta in bottega per la tua prova esclusiva. Ti aspettiamo!`;
     }
     window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, "_blank");
   };
@@ -88,184 +90,227 @@ export default function DashboardOverviewPage() {
   const countRitirato = reservations.filter((r) => r.stato === "RITIRATO").length;
 
   return (
-    <div className="p-6 sm:p-10 space-y-8 max-w-7xl">
-      
-      {/* Intestazione */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+    <div className="space-y-6 max-w-6xl mx-auto pb-12">
+      {/* Intestazione Principale Standard Taaaac */}
+      <div className="bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest block mb-1">
-            Gestione Showroom & Bottega
-          </span>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white font-serif-luxury">
-            Desk Prenotazioni &ldquo;Metti da Parte (24h)&rdquo;
+          <div className="flex items-center gap-2 text-xs font-semibold text-amber-600 uppercase tracking-wider mb-1">
+            <span>💎 Bottega d&apos;Autore &amp; Showroom</span>
+            <span>•</span>
+            <span>Click &amp; Reserve 24h</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+            <Gem className="w-7 h-7 text-amber-500" />
+            Camerino 24h &amp; Prenotazioni Pezzi
           </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Gestisci i pezzi bloccati online dai clienti per la prova gratuita in bottega entro 24 ore.
+          </p>
         </div>
 
-        <div className="flex items-center space-x-3">
-          <button
-            onClick={loadReservations}
-            className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-semibold text-white border border-white/10 transition-colors"
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/dashboard/studio"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-all"
           >
-            Aggiorna Dati
-          </button>
+            <Sliders className="w-4 h-4" />
+            <span>Live Studio</span>
+          </Link>
+          <Link
+            href="/dashboard/impostazioni"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm rounded-xl transition-all"
+          >
+            <Settings className="w-4 h-4" />
+            <span>Impostazioni</span>
+          </Link>
         </div>
       </div>
 
-      {/* Schede Metriche in Evidenza */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-luxe-card border border-white/10 rounded-2xl p-6 flex items-center justify-between">
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-xs uppercase font-bold text-amber-400 tracking-wider block mb-1">
-              In Attesa di Preparazione
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+              Da Preparare (Nuove)
             </span>
-            <span className="text-3xl font-bold text-white font-serif-luxury">
-              {countInAttesa}
-            </span>
+            <span className="text-3xl font-black text-amber-600 mt-1 block">{countInAttesa}</span>
+            <span className="text-[11px] text-slate-500 mt-0.5 block">Bloccate per 24 ore</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center">
             <Clock className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-luxe-card border border-white/10 rounded-2xl p-6 flex items-center justify-between">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-xs uppercase font-bold text-emerald-400 tracking-wider block mb-1">
-              Pronti per la Prova
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+              Pronte in Bottega
             </span>
-            <span className="text-3xl font-bold text-white font-serif-luxury">
-              {countPronto}
-            </span>
+            <span className="text-3xl font-black text-emerald-600 mt-1 block">{countPronto}</span>
+            <span className="text-[11px] text-slate-500 mt-0.5 block">In attesa visita cliente</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center">
             <Sparkles className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-luxe-card border border-white/10 rounded-2xl p-6 flex items-center justify-between">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-xs uppercase font-bold text-blue-400 tracking-wider block mb-1">
-              Completati / Venduti
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+              Ritirate / Concluse
             </span>
-            <span className="text-3xl font-bold text-white font-serif-luxury">
-              {countRitirato}
-            </span>
+            <span className="text-3xl font-black text-slate-900 mt-1 block">{countRitirato}</span>
+            <span className="text-[11px] text-slate-500 mt-0.5 block">Prove completate in sede</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center">
             <CheckCircle2 className="w-6 h-6" />
           </div>
         </div>
       </div>
 
-      {/* Barra Ricerca & Filtri */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-luxe-sub absolute left-3.5 top-3.5" />
+      {/* Barra Ricerca e Filtri */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="relative w-full sm:w-80">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Cerca cliente, pezzo o cellulare..."
+            placeholder="Cerca cliente, creazione o telefono..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-white placeholder-luxe-sub text-xs focus:outline-none focus:border-amber-400"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 focus:bg-white transition"
           />
         </div>
 
-        <div className="flex items-center space-x-2">
-          {["ALL", "IN_ATTESA", "PRONTO", "RITIRATO"].map((st) => (
+        <div className="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+          {[
+            { id: "ALL", label: "Tutte" },
+            { id: "IN_ATTESA", label: "In Attesa" },
+            { id: "PRONTO", label: "Pronte in Bottega" },
+            { id: "RITIRATO", label: "Ritirate" },
+            { id: "SCADUTO", label: "Scadute" },
+          ].map((f) => (
             <button
-              key={st}
-              onClick={() => setFilterStato(st)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all ${
-                filterStato === st
-                  ? "bg-amber-400 text-black font-bold"
-                  : "bg-white/5 text-luxe-sub hover:text-white"
+              key={f.id}
+              onClick={() => setFilterStato(f.id)}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                filterStato === f.id
+                  ? "bg-amber-500 text-slate-950 shadow-xs"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
             >
-              {st === "ALL" ? "Tutti" : st.replace("_", " ")}
+              {f.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Tabella Prenotazioni Camerino 24h */}
-      <div className="bg-luxe-card border border-white/10 rounded-2xl overflow-hidden shadow-xl">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-black/60 border-b border-white/10 text-luxe-sub uppercase tracking-wider font-semibold">
-              <tr>
-                <th className="p-4">Cliente & Contatto</th>
-                <th className="p-4">Creazione Riservata</th>
-                <th className="p-4">Scadenza Blocco</th>
-                <th className="p-4">Stato Richiesta</th>
-                <th className="p-4 text-right">Azioni Rapide</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="p-8 text-center text-luxe-sub">
-                    Caricamento prenotazioni...
-                  </td>
-                </tr>
-              ) : filtered.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="p-8 text-center text-luxe-sub">
-                    Nessuna richiesta trovata.
-                  </td>
-                </tr>
-              ) : (
-                filtered.map((r) => (
-                  <tr key={r.id} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="p-4">
-                      <div className="font-bold text-white text-sm">{r.nomeCliente}</div>
-                      <div className="text-luxe-sub font-mono">{r.whatsapp}</div>
-                      {r.note && (
-                        <div className="text-[11px] text-amber-300/80 italic mt-1">
-                          &ldquo;{r.note}&rdquo;
-                        </div>
-                      )}
-                    </td>
-                    <td className="p-4">
-                      <div className="font-semibold text-white">{r.titoloPezzo}</div>
-                      <div className="text-luxe-sub">{r.specifica || "Creazione d'autore"}</div>
-                    </td>
-                    <td className="p-4 font-mono text-luxe-sub">
-                      {new Date(r.dataScadenza).toLocaleString("it-IT", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                    <td className="p-4">
-                      <select
-                        value={r.stato}
-                        onChange={(e) => handleUpdateStatus(r.id, e.target.value)}
-                        className="px-3 py-1.5 rounded-lg bg-black/60 border border-white/20 text-xs font-semibold text-white focus:outline-none focus:border-amber-400"
-                      >
-                        <option value="IN_ATTESA">⏳ In Attesa</option>
-                        <option value="PRONTO">✨ Pronto per Prova</option>
-                        <option value="RITIRATO">✅ Ritirato / Venduto</option>
-                        <option value="SCADUTO">❌ Scaduto</option>
-                      </select>
-                    </td>
-                    <td className="p-4 text-right">
-                      <button
-                        onClick={() => handleOpenWhatsAppChat(r)}
-                        className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 text-xs font-bold inline-flex items-center space-x-1.5 transition-all"
-                        title="Invia messaggio WhatsApp al cliente"
-                      >
-                        <MessageSquare className="w-3.5 h-3.5" />
-                        <span>Notifica WhatsApp</span>
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Lista Prenotazioni Camerino */}
+      <div className="bg-white border border-slate-200/90 rounded-3xl overflow-hidden shadow-xs">
+        {loading ? (
+          <div className="p-12 text-center text-slate-400 text-sm">
+            Caricamento prenotazioni camerino...
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="p-12 text-center space-y-2">
+            <AlertCircle className="w-8 h-8 text-slate-300 mx-auto" />
+            <p className="text-sm font-bold text-slate-700">Nessuna prenotazione trovata</p>
+            <p className="text-xs text-slate-400">
+              I pezzi bloccati dai clienti con &ldquo;Metti da Parte (24h)&rdquo; compariranno qui in tempo reale.
+            </p>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {filtered.map((r) => (
+              <div
+                key={r.id}
+                className="p-5 sm:p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-5 hover:bg-slate-50/70 transition-colors"
+              >
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                        r.stato === "IN_ATTESA"
+                          ? "bg-amber-100 text-amber-800 border border-amber-200"
+                          : r.stato === "PRONTO"
+                          ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                          : r.stato === "RITIRATO"
+                          ? "bg-slate-100 text-slate-700 border border-slate-200"
+                          : "bg-rose-100 text-rose-800 border border-rose-200"
+                      }`}
+                    >
+                      {r.stato === "IN_ATTESA"
+                        ? "⏳ Da Preparare"
+                        : r.stato === "PRONTO"
+                        ? "✨ Pronto in Bottega"
+                        : r.stato === "RITIRATO"
+                        ? "✓ Ritirato / Venduto"
+                        : "✕ Scaduto"}
+                    </span>
+                    <span className="text-xs text-slate-400 font-mono">
+                      Scadenza 24h: {new Date(r.dataScadenza).toLocaleString("it-IT")}
+                    </span>
+                  </div>
 
+                  <h3 className="text-base font-black text-slate-900">
+                    {r.titoloPezzo}{" "}
+                    {r.prezzo && <span className="text-amber-600 font-bold ml-1">({r.prezzo})</span>}
+                  </h3>
+
+                  <div className="text-xs text-slate-600 flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <span>
+                      👤 Cliente: <strong className="text-slate-900">{r.nomeCliente}</strong>
+                    </span>
+                    <span>
+                      📱 WhatsApp: <strong className="font-mono text-slate-800">{r.whatsapp}</strong>
+                    </span>
+                    {r.note && (
+                      <span className="text-slate-500 italic">💬 &ldquo;{r.note}&rdquo;</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Azioni Rapide */}
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => handleOpenWhatsAppChat(r)}
+                    className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition cursor-pointer"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    <span>Avvisa su WhatsApp</span>
+                  </button>
+
+                  {r.stato === "IN_ATTESA" && (
+                    <button
+                      onClick={() => handleUpdateStatus(r.id, "PRONTO")}
+                      className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold transition cursor-pointer"
+                    >
+                      Segna Pronto in Bottega
+                    </button>
+                  )}
+
+                  {(r.stato === "IN_ATTESA" || r.stato === "PRONTO") && (
+                    <button
+                      onClick={() => handleUpdateStatus(r.id, "RITIRATO")}
+                      className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition cursor-pointer"
+                    >
+                      Segna Ritirato ✓
+                    </button>
+                  )}
+
+                  {r.stato !== "SCADUTO" && r.stato !== "RITIRATO" && (
+                    <button
+                      onClick={() => handleUpdateStatus(r.id, "SCADUTO")}
+                      className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-500 hover:text-rose-600 text-xs font-semibold transition cursor-pointer"
+                    >
+                      Svincola
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
