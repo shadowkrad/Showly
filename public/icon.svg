@@ -1,7 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <rect width="100" height="100" rx="22" fill="#0A0A0C"/>
-  <path d="M50 18L82 36L66 78L50 84L34 78L18 36L50 18Z" stroke="#D4AF37" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M18 36H82" stroke="#D4AF37" stroke-width="3"/>
-  <path d="M50 18L38 36L50 84L62 36L50 18Z" stroke="#D4AF37" stroke-width="3" stroke-linejoin="round"/>
-  <circle cx="50" cy="50" r="4" fill="#F3E5AB"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="showlyBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#292524"/>
+      <stop offset="50%" stop-color="#141210"/>
+      <stop offset="100%" stop-color="#09090b"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="45%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="goldLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="goldDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#92400e"/>
+    </linearGradient>
+    <linearGradient id="showlyGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="showlyDrop" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000000" flood-opacity="0.65"/>
+    </filter>
+  </defs>
+
+  <!-- Background Squircle Standard Taaaac -->
+  <rect width="512" height="512" rx="115" fill="url(#showlyBg)"/>
+  <rect width="512" height="256" rx="115" fill="url(#showlyGlow)"/>
+
+  <!-- Cornice Lusso Oreficeria / Atelier -->
+  <rect x="18" y="18" width="476" height="476" rx="100" fill="none" stroke="url(#goldGrad)" stroke-width="3.5" stroke-opacity="0.45"/>
+
+  <!-- Icona Diamante Taglio Brillante & Piedistallo Vetrina d'Autore -->
+  <g filter="url(#showlyDrop)" transform="translate(256, 252)">
+    <!-- Corona Superiore del Diamante -->
+    <!-- Tavola centrale superiore -->
+    <polygon points="-58,-105 58,-105 82,-38 -82,-38" fill="url(#goldLight)"/>
+    <!-- Faccetta sinistra corona -->
+    <polygon points="-135,-38 -58,-105 -82,-38" fill="url(#goldGrad)"/>
+    <!-- Faccetta destra corona -->
+    <polygon points="135,-38 58,-105 82,-38" fill="url(#goldDark)"/>
+
+    <!-- Padiglione Inferiore del Diamante (Cono sfaccettato) -->
+    <!-- Faccetta centrale padiglione -->
+    <polygon points="-82,-38 82,-38 0,122" fill="url(#goldGrad)"/>
+    <!-- Faccetta sinistra padiglione -->
+    <polygon points="-135,-38 -82,-38 0,122" fill="url(#goldDark)"/>
+    <!-- Faccetta destra padiglione -->
+    <polygon points="135,-38 82,-38 0,122" fill="url(#goldLight)" fill-opacity="0.9"/>
+
+    <!-- Linee di rifrazione interne cristalline -->
+    <polyline points="-135,-38 135,-38" fill="none" stroke="#ffffff" stroke-width="3" stroke-opacity="0.75"/>
+    <polyline points="-58,-105 -82,-38 0,122 82,-38 58,-105" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-opacity="0.65" stroke-linejoin="round"/>
+
+    <!-- Piedistallo / Base Espositiva Vetrina -->
+    <rect x="-95" y="142" width="190" height="12" rx="6" fill="url(#goldGrad)" opacity="0.9"/>
+    <rect x="-60" y="162" width="120" height="8" rx="4" fill="url(#goldGrad)" opacity="0.5"/>
+
+    <!-- Scintilla Glamour Principale in alto a destra -->
+    <path d="M115 -125 Q115 -92 148 -92 Q115 -92 115 -59 Q115 -92 82 -92 Q115 -92 115 -125 Z" fill="#ffffff"/>
+    <!-- Scintilla Secondaria a sinistra -->
+    <path d="M-120 -110 Q-120 -90 -100 -90 Q-120 -90 -120 -70 Q-120 -90 -140 -90 Q-120 -90 -120 -110 Z" fill="#fef08a"/>
+  </g>
 </svg>

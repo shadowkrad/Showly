@@ -5,20 +5,34 @@ import { ShowlyConfig } from "@/lib/config";
 
 interface AtelierSectionProps {
   config: ShowlyConfig;
+  isMobilePreview?: boolean;
 }
 
-export default function AtelierSection({ config }: AtelierSectionProps) {
-  const cleanPhone = config.atelier.whatsappButtonText.replace(/[^0-9]/g, "") || "393400000000";
+export default function AtelierSection({
+  config,
+  isMobilePreview = false,
+}: AtelierSectionProps) {
+  const cleanPhone =
+    config.atelier.whatsappButtonText.replace(/[^0-9]/g, "") || "393400000000";
 
   return (
-    <section id="bottega" className="py-20 sm:py-28 border-b border-white/5 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
-        
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+    <section
+      id="bottega"
+      className={`${
+        isMobilePreview ? "py-10" : "py-14 sm:py-24"
+      } border-b border-white/5 relative overflow-hidden`}
+    >
+      <div className={`max-w-7xl mx-auto ${isMobilePreview ? "px-4" : "px-4 sm:px-8"}`}>
+        <div
+          className={`grid items-center ${
+            isMobilePreview
+              ? "grid-cols-1 gap-7"
+              : "grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12"
+          }`}
+        >
           {/* Foto Bottega Still-Life / Banco da lavoro */}
-          <div className="lg:col-span-6 relative">
-            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+          <div className={isMobilePreview ? "" : "lg:col-span-6 relative"}>
+            <div className="relative aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
               <img
                 src={config.atelier.photoUrl}
                 alt="La Bottega"
@@ -28,14 +42,14 @@ export default function AtelierSection({ config }: AtelierSectionProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
 
               {/* Badge di stato aperto/chiuso */}
-              <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between backdrop-blur-md bg-black/60 border border-white/10 p-4 rounded-2xl">
-                <div className="flex items-center space-x-3">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                  <span className="text-xs font-semibold text-white">
+              <div className="absolute bottom-3.5 left-3.5 right-3.5 sm:bottom-6 sm:left-6 sm:right-6 flex items-center justify-between gap-2 backdrop-blur-md bg-black/65 border border-white/10 p-3 sm:p-4 rounded-xl sm:rounded-2xl">
+                <div className="flex items-center space-x-2.5 min-w-0">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                  <span className="text-[11px] sm:text-xs font-semibold text-white truncate">
                     {config.atelier.statusLiveText}
                   </span>
                 </div>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-amber-300">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-amber-300 shrink-0">
                   Live
                 </span>
               </div>
@@ -43,19 +57,27 @@ export default function AtelierSection({ config }: AtelierSectionProps) {
           </div>
 
           {/* Dettagli e Orari di Ricezione */}
-          <div className="lg:col-span-6 flex flex-col justify-center">
-            <span className="text-[11px] font-bold tracking-[0.25em] text-amber-400 uppercase font-mono mb-2 block">
+          <div
+            className={`${
+              isMobilePreview ? "" : "lg:col-span-6"
+            } flex flex-col justify-center`}
+          >
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.22em] text-amber-400 uppercase font-mono mb-1.5 block">
               {config.atelier.tagLabel}
             </span>
-            <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white tracking-tight mb-6">
+            <h2
+              className={`font-serif-luxury font-bold text-white tracking-tight ${
+                isMobilePreview ? "text-2xl mb-4" : "text-2xl sm:text-5xl mb-5 sm:mb-6"
+              }`}
+            >
               {config.atelier.heading}
             </h2>
-            <p className="text-sm text-luxe-sub leading-relaxed font-light mb-8">
+            <p className="text-xs sm:text-sm text-luxe-sub leading-relaxed font-light mb-6 sm:mb-8">
               {config.atelier.description}
             </p>
 
             {/* Scheda Orari e Indirizzo */}
-            <div className="bg-luxe-card border border-white/10 rounded-2xl p-6 mb-8 space-y-4">
+            <div className="bg-luxe-card border border-white/10 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 space-y-3.5">
               <div className="flex items-start space-x-3 text-xs text-luxe-light">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span>{config.atelier.addressText}</span>
@@ -65,38 +87,45 @@ export default function AtelierSection({ config }: AtelierSectionProps) {
                 <div className="space-y-1">
                   <div>{config.atelier.hoursWeekdayText}</div>
                   <div>{config.atelier.hoursSaturdayText}</div>
-                  <div className="text-rose-400/80">{config.atelier.hoursSundayText}</div>
+                  <div className="text-rose-400/80">
+                    {config.atelier.hoursSundayText}
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Pulsanti Azione: Mappa & WhatsApp */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <div
+              className={`flex gap-3 ${
+                isMobilePreview
+                  ? "flex-col items-stretch"
+                  : "flex-col sm:flex-row items-stretch sm:items-center"
+              }`}
+            >
               <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(config.atelier.addressText)}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  config.atelier.addressText
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/30 text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center space-x-2"
+                className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/30 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center justify-center space-x-2"
               >
-                <Compass className="w-4 h-4 text-amber-400" />
-                <span>{config.atelier.directionsButtonText}</span>
+                <Compass className="w-4 h-4 text-amber-400 shrink-0" />
+                <span className="truncate">{config.atelier.directionsButtonText}</span>
               </a>
 
               <a
                 href={`https://wa.me/${cleanPhone}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-2 shadow-lg hover:scale-105 active:scale-95"
+                className="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-[11px] sm:text-xs uppercase tracking-wider transition-all flex items-center justify-center space-x-2 shadow-lg hover:scale-105 active:scale-95"
               >
-                <MessageSquare className="w-4 h-4" />
-                <span>{config.atelier.whatsappButtonText}</span>
+                <MessageSquare className="w-4 h-4 shrink-0" />
+                <span className="truncate">{config.atelier.whatsappButtonText}</span>
               </a>
             </div>
-
           </div>
-
         </div>
-
       </div>
     </section>
   );

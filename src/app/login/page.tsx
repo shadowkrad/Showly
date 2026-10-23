@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Lock, ArrowRight, ShieldCheck, AlertCircle, Sparkles } from "lucide-react";
+import { ShowlyModuleIcon } from "@/components/common/TaaaacLogo";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -104,8 +105,8 @@ export default function LoginPage() {
 
         {/* Intestazione */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 text-amber-400 flex items-center justify-center mx-auto mb-4 shadow-inner">
-            <Lock className="w-7 h-7" />
+          <div className="flex justify-center mb-4">
+            <ShowlyModuleIcon size={56} />
           </div>
           <span className="text-[10px] uppercase font-bold tracking-[0.25em] text-amber-400/90 font-mono block mb-1">
             Area Riservata Esercente
@@ -113,8 +114,9 @@ export default function LoginPage() {
           <h1 className="font-serif-luxury text-3xl font-bold text-white tracking-tight">
             Accedi a Showly
           </h1>
-          <p className="text-xs text-luxe-sub mt-2">
-            Gestisci la vetrina, il camerino 24h e le creazioni
+          <p className="text-xs text-luxe-sub mt-2 flex items-center justify-center gap-1.5">
+            <Lock className="w-3.5 h-3.5 text-amber-400/80" />
+            <span>Gestisci la vetrina, il camerino 24h e le creazioni</span>
           </p>
         </div>
 

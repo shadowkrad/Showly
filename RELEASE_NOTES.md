@@ -23,7 +23,13 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - **Hub Sincronizzazione Omnicanale v1.1.0**: sincronizzazione 1-Click degli orari della bottega con Google Maps, Meta (Facebook & IG), WhatsApp Business e Review Booster.
 - **Live Showcase Studio Split-Screen**: editor grafico in tempo reale con pannello sinistro di configurazione, upload immagini WebP e simulatore destro interattivo con switch tra Smartphone 390px e Desktop.
 
-### 4. Pacchetto Sicurezza Integrato (v1.0.6)
+### 4. Responsività Mobile Totale & Icona Ufficiale Personalizzata Showly
+- **Icona Standard Modulo Showly (`ShowlyModuleIcon` & `public/icon.svg`)**: grafica ufficiale su squircle Taaaac (sfondo onice/antracite con cornice oro champagne, diamante taglio brillante sfaccettato su piedistallo espositivo e scintilla d'autore) integrata nell'Header della vetrina pubblica, nel Footer, nella pagina di Login, nella Sidebar gestionale (`TaaaacLogo` + card Atelier) e negli asset PWA/Favicon (`icon.svg`, `apple-touch-icon.png`, `icons/icon-192.png`, `icons/icon-512.png`, `manifest.json`).
+- **Ottimizzazione Mobile & Simulatore 390px (`isMobilePreview`)**:
+  - Risolto il disallineamento nel simulatore smartphone 390px (in `Impostazioni -> Aspetto & Brand` e `Live Showcase Studio`) dove le media query desktop (`md:`, `sm:`, `lg:`) causavano l'andata a capo del titolo, la fuoriuscita orizzontale delle voci menu e la comparsa delle barre di scorrimento bianche di Windows.
+  - Introdotto menu mobile hamburger a tendina (`Header.tsx`), card calibrate per schermi compatti (`ShowGallery.tsx`), griglia a colonna singola (`CatalogGrid.tsx`, `AtelierSection.tsx`) e rimozione totale dello scroll orizzontale (`overflow-x-hidden` con scrollbar sottile trasparente).
+
+### 5. Pacchetto Sicurezza Integrato (v1.0.6)
 - Autenticazione a due fattori (TOTP MFA RFC 6238) con QR code e 8 codici di emergenza.
 - Rate limiting anti brute-force (blocco 15 min dopo 5 fallimenti consecutivi).
 - Protezione invisibile bot Honeypot.

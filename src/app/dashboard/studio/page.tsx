@@ -325,36 +325,60 @@ export default function LiveShowcaseStudioPage() {
         </div>
 
         {/* COLONNA DESTRA: SIMULATORE LIVE */}
-        <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-4 sm:p-6 flex items-center justify-center overflow-hidden">
+        <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-3 sm:p-6 flex items-center justify-center overflow-hidden">
           <div
-            className={`bg-luxe-black text-luxe-light overflow-y-auto transition-all duration-300 shadow-2xl ${
+            className={`bg-luxe-black text-luxe-light overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/20 [&::-webkit-scrollbar-thumb]:rounded-full transition-all duration-300 shadow-2xl ${
               simulatorMode === "mobile"
-                ? "w-[390px] h-[720px] rounded-[42px] border-[8px] border-neutral-800"
+                ? "w-full max-w-[390px] h-[720px] rounded-[42px] border-[8px] border-neutral-800"
                 : "w-full h-[720px] rounded-2xl border border-white/15"
             }`}
           >
-            <Header config={config} onOpenReserve={() => {}} />
-            <section className="relative h-[340px] flex items-center justify-center overflow-hidden">
+            <Header
+              config={config}
+              onOpenReserve={() => {}}
+              isMobilePreview={simulatorMode === "mobile"}
+            />
+            <section
+              className={`relative ${
+                simulatorMode === "mobile" ? "h-[250px]" : "h-[340px]"
+              } flex items-center justify-center overflow-hidden border-b border-white/5`}
+            >
               <img
                 src={config.hero.imageUrl}
                 alt="Hero Preview"
                 className="absolute inset-0 w-full h-full object-cover scale-105 brightness-75"
               />
-              <div className="absolute inset-0 hero-vignette"></div>
-              <div className="relative z-10 max-w-2xl mx-auto px-4 text-center space-y-3">
-                <span className="inline-block px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[9px] uppercase tracking-[0.2em] text-amber-300 font-semibold">
+              <div className="absolute inset-0 bg-gradient-to-t from-luxe-black via-black/40 to-black/30"></div>
+              <div className="relative z-10 max-w-2xl mx-auto px-4 text-center space-y-2.5">
+                <span className="inline-block px-3 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/15 text-[9px] uppercase tracking-[0.18em] text-amber-300 font-semibold leading-snug">
                   {config.hero.tagText}
                 </span>
                 <h2
-                  className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white leading-tight"
+                  className={`font-serif-luxury ${
+                    simulatorMode === "mobile" ? "text-xl" : "text-2xl sm:text-3xl"
+                  } font-bold text-white leading-tight`}
                   dangerouslySetInnerHTML={{ __html: config.hero.headline }}
                 />
               </div>
             </section>
-            <ShowGallery config={config} onOpenReserve={() => {}} />
-            <CatalogGrid config={config} onOpenReserve={() => {}} />
-            <AtelierSection config={config} />
-            <Footer config={config} />
+            <ShowGallery
+              config={config}
+              onOpenReserve={() => {}}
+              isMobilePreview={simulatorMode === "mobile"}
+            />
+            <CatalogGrid
+              config={config}
+              onOpenReserve={() => {}}
+              isMobilePreview={simulatorMode === "mobile"}
+            />
+            <AtelierSection
+              config={config}
+              isMobilePreview={simulatorMode === "mobile"}
+            />
+            <Footer
+              config={config}
+              isMobilePreview={simulatorMode === "mobile"}
+            />
           </div>
         </div>
       </div>

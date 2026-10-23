@@ -16,6 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import UserSecurityModal from "@/components/UserSecurityModal";
+import { TaaaacLogo, ShowlyModuleIcon } from "@/components/common/TaaaacLogo";
 
 export default function DashboardLayout({
   children,
@@ -65,15 +66,7 @@ export default function DashboardLayout({
       {/* Mobile Top Bar */}
       <div className="md:hidden flex items-center justify-between px-4 py-2.5 bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40">
         <Link href="/dashboard" className="flex items-center gap-2 min-w-0">
-          <div className="w-7 h-7 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-black shadow-xs">
-            <Gem className="w-4 h-4" />
-          </div>
-          <span className="font-black tracking-tight text-white text-base">
-            taaaac<span className="text-amber-400">.eu</span>
-          </span>
-          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-            Showly
-          </span>
+          <TaaaacLogo iconSize={20} textSize="text-base" showBadge={true} badgeText="Showly" />
         </Link>
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -102,15 +95,7 @@ export default function DashboardLayout({
           {/* Brand Header */}
           <div className="px-4 py-4 border-b border-slate-800 flex items-center justify-between">
             <Link href="/dashboard" className="flex items-center gap-2 min-w-0 flex-1">
-              <div className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black shadow-xs shrink-0">
-                <Gem className="w-4 h-4" />
-              </div>
-              <span className="font-black tracking-tight text-white text-base">
-                taaaac<span className="text-amber-400">.eu</span>
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                Showly
-              </span>
+              <TaaaacLogo iconSize={22} textSize="text-base" showBadge={true} badgeText="Showly" />
             </Link>
             <button
               onClick={() => setMobileOpen(false)}
@@ -122,9 +107,7 @@ export default function DashboardLayout({
 
           {/* Atelier Card */}
           <div className="px-3 py-2.5 mx-3 my-3 bg-slate-800/80 rounded-2xl border border-slate-700/60 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-slate-950 font-black flex items-center justify-center shrink-0 shadow-xs">
-              💎
-            </div>
+            <ShowlyModuleIcon size={36} />
             <div className="min-w-0 flex-1">
               <p className="text-xs font-bold text-white truncate">{brandName}</p>
               <p className="text-[10px] text-amber-400 font-mono truncate">
