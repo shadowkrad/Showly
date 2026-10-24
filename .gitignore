@@ -38,3 +38,11 @@ next-env.d.ts
 *.pem
 .idea/
 .vscode/
+
+# Capacitor & Mobile builds
+android/.gradle/
+android/build/
+android/app/build/
+ios/App/build/
+ios/App/Pods/
+ios/App/DerivedData/

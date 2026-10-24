@@ -46,8 +46,8 @@ export default function HomePage() {
       strictFocusLock={true}
       defaultLoupeMode={true}
       watermarkText={`${config.brand.name.toUpperCase()} • MODELLO PROTETTO`}
-      showWatermark={true}
-      showFloatingBadge={true}
+      showWatermark={false}
+      showFloatingBadge={false}
     >
       <main className="min-h-screen flex flex-col bg-luxe-black text-luxe-light selection:bg-amber-400 selection:text-black overflow-x-hidden">
       {/* 1. Header Minimal Trasparente con Icona Modulo Showly & Lucchetto */}
