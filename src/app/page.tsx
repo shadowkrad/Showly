@@ -40,7 +40,8 @@ export default function HomePage() {
   return (
     <PhotoProtectionShield
       enabled={true}
-      strictFocusLock={false}
+      strictFocusLock={true}
+      defaultLoupeMode={true}
       watermarkText={`${config.brand.name.toUpperCase()} • MODELLO PROTETTO`}
       showWatermark={true}
       showFloatingBadge={true}

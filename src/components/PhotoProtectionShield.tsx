@@ -6,11 +6,15 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from "react";
-import { ShieldAlert, Lock, EyeOff, ShieldCheck } from "lucide-react";
+import { Lock, EyeOff, ShieldCheck, ScanEye, Eye } from "lucide-react";
 
 interface ProtectionContextValue {
   isShieldTriggered: boolean;
+  isTempMasked: boolean; // Oscuramento istantaneo su pressione Shift/Win/Ctrl/Alt o uscita mouse
+  loupeMode: boolean; // Modalità Lente Anti-Video (mostra nitido solo sotto il dito/cursore)
+  setLoupeMode: (v: boolean) => void;
   triggerReason: string | null;
   watermarkText: string;
   showWatermark: boolean;
@@ -20,6 +24,9 @@ interface ProtectionContextValue {
 
 const ProtectionContext = createContext<ProtectionContextValue>({
   isShieldTriggered: false,
+  isTempMasked: false,
+  loupeMode: true,
+  setLoupeMode: () => {},
   triggerReason: null,
   watermarkText: "ATELIER AURORA • MODELLO PROTETTO",
   showWatermark: true,
@@ -32,7 +39,8 @@ export const usePhotoProtection = () => useContext(ProtectionContext);
 interface PhotoProtectionShieldProps {
   children: React.ReactNode;
   enabled?: boolean;
-  strictFocusLock?: boolean; // Se true (es. in Cassaforte), oscura istantaneamente appena la finestra perde il focus (Snipping Tool / OBS / Recorder)
+  strictFocusLock?: boolean;
+  defaultLoupeMode?: boolean;
   watermarkText?: string;
   showWatermark?: boolean;
   showFloatingBadge?: boolean;
@@ -42,11 +50,14 @@ export function PhotoProtectionShield({
   children,
   enabled = true,
   strictFocusLock = true,
+  defaultLoupeMode = false,
   watermarkText = "PROPRIETÀ RISERVATA • VIETATA LA RIPRODUZIONE",
   showWatermark = true,
   showFloatingBadge = true,
 }: PhotoProtectionShieldProps) {
   const [isShieldTriggered, setIsShieldTriggered] = useState(false);
+  const [isTempMasked, setIsTempMasked] = useState(false);
+  const [loupeMode, setLoupeMode] = useState(defaultLoupeMode);
   const [triggerReason, setTriggerReason] = useState<string | null>(null);
   const [toastWarning, setToastWarning] = useState<string | null>(null);
 
@@ -59,20 +70,22 @@ export function PhotoProtectionShield({
 
   const activateBlackout = useCallback((reason: string) => {
     setIsShieldTriggered(true);
+    setIsTempMasked(true);
     setTriggerReason(reason);
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(
-          "Contenuto protetto da Scudo Anti-Cattura Showly."
+          "🔒 Contenuto protetto da Scudo Anti-Cattura Showly."
         );
       }
     } catch {
-      // ignore clipboard errors
+      // ignore
     }
   }, []);
 
   const dismissShield = useCallback(() => {
     setIsShieldTriggered(false);
+    setIsTempMasked(false);
     setTriggerReason(null);
   }, []);
 
@@ -85,111 +98,157 @@ export function PhotoProtectionShield({
   useEffect(() => {
     if (!enabled) return;
 
-    // 1. Blocco Tasto Destro / Pressione prolungata salvataggio immagine
+    // 1. Polling a 60fps di document.hasFocus():
+    // Cattura in <16ms qualsiasi perdita di fuoco verso Strumento di Cattura (Win+Shift+S), OBS, ShareX o barra di stato mobile
+    let rafId: number;
+    const checkFocusLoop = () => {
+      if (strictFocusLock && typeof document !== "undefined") {
+        if (!document.hasFocus() || document.hidden) {
+          setIsTempMasked(true);
+        }
+      }
+      rafId = requestAnimationFrame(checkFocusLoop);
+    };
+    rafId = requestAnimationFrame(checkFocusLoop);
+
+    // 2. Blocco Tasto Destro & Pressione Prolungata
     const handleContextMenu = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (
-        target &&
-        (target.tagName === "IMG" || target.closest("[data-protected-photo]"))
+        !target ||
+        (target.tagName !== "INPUT" && target.tagName !== "TEXTAREA")
       ) {
         e.preventDefault();
         showWarningToast(
-          "🔒 Salvataggio disabilitato: i modelli sono protetti da Scudo Anti-Copia."
-        );
-      } else if (strictFocusLock) {
-        e.preventDefault();
-        showWarningToast(
-          "🔒 Catalogo protetto: menu contestuale e download disabilitati."
+          "🔒 Salvataggio e copia disabilitati: modelli protetti da diritto d'autore."
         );
       }
     };
 
-    // 2. Blocco Trascinamento (Drag & Drop foto sul desktop)
+    // 3. Blocco Drag & Drop
     const handleDragStart = (e: DragEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (
-        target &&
-        (target.tagName === "IMG" || target.closest("[data-protected-photo]"))
-      ) {
-        e.preventDefault();
-        showWarningToast("🔒 Trascinamento e salvataggio modelli bloccati.");
-      }
+      e.preventDefault();
     };
 
-    // 3. Rilevamento Tasti Cattura Schermo, Registrazione, Salvataggio e Ispezione
+    // 4. INTERCETTAZIONE PREVENTIVA TASTI MODIFICATORI (Win/Meta, Shift, Ctrl, Alt, PrintScreen, F12)
+    // Perché Win+Shift+S o Cmd+Shift+4 venivano catturati prima? Perché il sistema operativo intercetta la 'S' finale,
+    // MA il browser riceve SEMPRE il keydown di 'Meta' (Win/Cmd) o 'Shift' un istante PRIMA che l'utente prema 'S'!
     const handleKeyDown = (e: KeyboardEvent) => {
+      const activeTag = (document.activeElement as HTMLElement)?.tagName;
+      const isTypingInInput =
+        activeTag === "INPUT" ||
+        activeTag === "TEXTAREA" ||
+        activeTag === "SELECT";
+
       const key = e.key.toLowerCase();
 
-      // PrintScreen
-      if (e.key === "PrintScreen" || e.keyCode === 44) {
-        e.preventDefault();
-        activateBlackout(
-          "Rilevato tentativo di cattura schermata (PrintScreen)."
-        );
-        return;
-      }
-
-      // macOS Screenshot / Screen Recording (Cmd + Shift + 3 / 4 / 5)
-      if (e.metaKey && e.shiftKey && ["3", "4", "5", "6"].includes(key)) {
-        e.preventDefault();
-        activateBlackout(
-          "Rilevato avvio software di cattura o registrazione schermo."
-        );
-        return;
-      }
-
-      // Windows Snipping Tool / Game Bar Recording (Win + Shift + S / Win + Alt + R / Win + G)
-      if (e.metaKey && e.shiftKey && key === "s") {
-        e.preventDefault();
-        activateBlackout("Rilevato strumento di cattura schermo esterno.");
-        return;
-      }
-
-      // Ctrl/Cmd + S (Salva pagina completa), Ctrl/Cmd + P (Stampa PDF), Ctrl/Cmd + U (Sorgente)
-      if ((e.ctrlKey || e.metaKey) && ["s", "p", "u"].includes(key)) {
-        e.preventDefault();
-        activateBlackout(
-          "Il salvataggio locale e l'esportazione dei modelli non sono consentiti."
-        );
-        return;
-      }
-
-      // DevTools (F12 o Ctrl+Shift+I / Ctrl+Shift+C / Ctrl+Shift+J)
+      // Se l'utente NON sta scrivendo in un campo di testo e preme qualsiasi tasto modificatore
+      // (Meta/Win, Shift, Control, Alt) -> oscura preventivamente in 0ms tutte le foto!
       if (
+        !isTypingInInput &&
+        (e.key === "Meta" ||
+          e.key === "Shift" ||
+          e.key === "Control" ||
+          e.key === "Alt" ||
+          e.key === "OS" ||
+          e.metaKey ||
+          e.ctrlKey ||
+          e.altKey)
+      ) {
+        setIsTempMasked(true);
+      }
+
+      // PrintScreen o F12 o combinazioni di cattura note -> attiva il sipario permanente
+      if (
+        e.key === "PrintScreen" ||
+        e.keyCode === 44 ||
         e.key === "F12" ||
-        ((e.ctrlKey || e.metaKey) &&
-          e.shiftKey &&
-          ["i", "c", "j"].includes(key))
+        (e.metaKey && e.shiftKey) ||
+        (e.ctrlKey && e.shiftKey) ||
+        ((e.ctrlKey || e.metaKey) && ["s", "p", "u", "g"].includes(key))
       ) {
         e.preventDefault();
         activateBlackout(
-          "Rilevata apertura strumenti di ispezione o estrazione asset."
+          "Rilevata combinazione di tasti per cattura schermo, registrazione o salvataggio."
         );
       }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.key === "PrintScreen" || e.keyCode === 44) {
+        activateBlackout("Rilevato tasto PrintScreen (Cattura Schermo).");
+        return;
+      }
+      // Se il sipario permanente non è scattato e la finestra ha ancora il focus, rimuove la maschera preventiva dopo 600ms dal rilascio dei tasti
+      if (!e.metaKey && !e.shiftKey && !e.ctrlKey && !e.altKey) {
+        setTimeout(() => {
+          if (document.hasFocus() && !document.hidden) {
+            setIsTempMasked(false);
+          }
+        }, 600);
+      }
+    };
+
+    // 5. Oscuramento su uscita del cursore dalla finestra (es. per cliccare OBS / Cattura su barra applicazioni o secondo monitor)
+    const handleMouseLeaveViewport = (e: MouseEvent) => {
+      if (
+        e.clientY <= 0 ||
+        e.clientX <= 0 ||
+        e.clientX >= window.innerWidth ||
+        e.clientY >= window.innerHeight
+      ) {
+        setIsTempMasked(true);
+      }
+    };
+
+    const handleMouseEnterViewport = () => {
+      if (document.hasFocus() && !isShieldTriggered) {
+        setIsTempMasked(false);
+      }
+    };
+
+    // 6. Multi-touch su Smartphone (es. Screenshot a 3 dita o combo tasti che genera touchcancel)
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        // Più di 1 dito sullo schermo -> oscura immediatamente per bloccare screenshot multi-touch o pinch
+        setIsTempMasked(true);
         activateBlackout(
-          "Rilevato tentativo di cattura schermata (PrintScreen)."
+          "Rilevato gesto multi-touch / cattura schermata su dispositivo mobile."
         );
       }
     };
 
-    // 4. Oscuramento Automatico su Perdita Focus / Passaggio a Software Esterni (OBS, Cattura, Switch App)
+    const handleTouchCancel = () => {
+      // iOS e Android lanciano touchcancel quando viene premuto Power + Volume Su per fare uno screenshot!
+      setIsTempMasked(true);
+      activateBlackout(
+        "Interruzione touch di sistema rilevata (protezione screenshot mobile)."
+      );
+    };
+
     const handleWindowBlur = () => {
+      setIsTempMasked(true);
       if (strictFocusLock) {
         activateBlackout(
-          "Finestra fuori fuoco: le foto sono state oscurate automaticamente per impedire catture o registrazioni da programmi esterni."
+          "Finestra fuori fuoco: le foto sono state oscurate automaticamente per impedire catture da programmi esterni (Strumento di Cattura, OBS, Screen Recorder)."
         );
+      }
+    };
+
+    const handleWindowFocus = () => {
+      if (!isShieldTriggered) {
+        setIsTempMasked(false);
       }
     };
 
     const handleVisibilityChange = () => {
-      if (document.hidden && strictFocusLock) {
-        activateBlackout(
-          "Cambio scheda o app rilevato: protezione visuale attivata."
-        );
+      if (document.hidden) {
+        setIsTempMasked(true);
+        if (strictFocusLock) {
+          activateBlackout(
+            "Cambio scheda o app rilevato: protezione visuale attivata."
+          );
+        }
       }
     };
 
@@ -198,22 +257,54 @@ export function PhotoProtectionShield({
     window.addEventListener("keydown", handleKeyDown, true);
     window.addEventListener("keyup", handleKeyUp, true);
     window.addEventListener("blur", handleWindowBlur);
+    window.addEventListener("focus", handleWindowFocus);
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.documentElement.addEventListener(
+      "mouseleave",
+      handleMouseLeaveViewport
+    );
+    document.documentElement.addEventListener(
+      "mouseenter",
+      handleMouseEnterViewport
+    );
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchcancel", handleTouchCancel, { passive: true });
 
     return () => {
+      cancelAnimationFrame(rafId);
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("dragstart", handleDragStart);
       window.removeEventListener("keydown", handleKeyDown, true);
       window.removeEventListener("keyup", handleKeyUp, true);
       window.removeEventListener("blur", handleWindowBlur);
+      window.removeEventListener("focus", handleWindowFocus);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.documentElement.removeEventListener(
+        "mouseleave",
+        handleMouseLeaveViewport
+      );
+      document.documentElement.removeEventListener(
+        "mouseenter",
+        handleMouseEnterViewport
+      );
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchcancel", handleTouchCancel);
     };
-  }, [enabled, strictFocusLock, activateBlackout, showWarningToast]);
+  }, [
+    enabled,
+    strictFocusLock,
+    isShieldTriggered,
+    activateBlackout,
+    showWarningToast,
+  ]);
 
   return (
     <ProtectionContext.Provider
       value={{
         isShieldTriggered,
+        isTempMasked,
+        loupeMode,
+        setLoupeMode,
         triggerReason,
         watermarkText,
         showWatermark,
@@ -261,28 +352,47 @@ export function PhotoProtectionShield({
           </div>
         )}
 
-        {/* Badge Flottante Scudo Attivo (con pulsante test dimostrativo) */}
+        {/* Barra Flottante Controllo Scudo & Modalità Lente Anti-Video in Basso a Sinistra */}
         {enabled && showFloatingBadge && (
-          <div className="fixed bottom-5 left-4 sm:bottom-6 sm:left-6 z-40">
+          <div className="fixed bottom-5 left-4 sm:bottom-6 sm:left-6 z-40 flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setLoupeMode((prev) => !prev)}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-full border text-[10px] font-bold shadow-xl backdrop-blur-md transition-all cursor-pointer ${
+                loupeMode
+                  ? "bg-amber-400 text-black border-amber-300"
+                  : "bg-black/85 hover:bg-black text-amber-300 border-amber-400/35"
+              }`}
+              title="Attiva/Disattiva il Velo Ottico Anti-Video (mostra la foto nitida solo dove passi col dito o col mouse)"
+            >
+              {loupeMode ? (
+                <>
+                  <ScanEye className="w-3.5 h-3.5 shrink-0" />
+                  <span>Lente Anti-Video: ON</span>
+                </>
+              ) : (
+                <>
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span className="hidden sm:inline">Scudo Anti-Cattura</span>
+                  <span className="sm:hidden">Scudo ON</span>
+                </>
+              )}
+            </button>
+
             <button
               type="button"
               onClick={triggerManualTest}
-              className="group flex items-center gap-2 px-3 py-2 rounded-full bg-black/85 hover:bg-black border border-amber-400/35 text-[10px] font-bold text-amber-300 shadow-xl backdrop-blur-md transition-all cursor-pointer"
-              title="Clicca per testare l'oscuramento anti-registrazione"
+              className="px-2.5 py-2 rounded-full bg-black/85 hover:bg-amber-400 text-amber-200 hover:text-black border border-white/15 text-[10px] font-bold shadow-xl backdrop-blur-md transition-all cursor-pointer"
+              title="Simula il blocco schermo anti-cattura"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-              <span className="hidden sm:inline">Scudo Anti-Cattura Attivo</span>
-              <span className="sm:hidden">Scudo Foto</span>
-              <span className="px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-200 text-[9px] group-hover:bg-amber-400 group-hover:text-black transition-colors">
-                Test Oscuramento
-              </span>
+              Test Blocco
             </button>
           </div>
         )}
 
-        {/* SIPARIO DI OSCURAMENTO TOTALE QUANDO SI ATTIVA UN PROGRAMMA DI CATTURA O REGISTRAZIONE */}
-        {isShieldTriggered && (
-          <div className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-3xl flex items-center justify-center p-4 animate-in fade-in duration-75">
+        {/* SIPARIO DI OSCURAMENTO IMMEDIATO (SIA SU TRIGGER PERMANENTE SIA SU PRESSIONE TASTI / USCITA MOUSE) */}
+        {(isShieldTriggered || isTempMasked) && (
+          <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center p-4">
             <div className="max-w-md w-full bg-neutral-950 border border-amber-400/40 rounded-3xl p-7 sm:p-8 text-center space-y-5 shadow-2xl">
               <div className="w-16 h-16 rounded-2xl bg-amber-500/15 border border-amber-400/40 text-amber-400 flex items-center justify-center mx-auto">
                 <EyeOff className="w-8 h-8" />
@@ -297,10 +407,10 @@ export function PhotoProtectionShield({
                 </h2>
                 <p className="text-xs text-neutral-300 mt-2 leading-relaxed">
                   {triggerReason ||
-                    "È stato rilevato un programma esterno di cattura schermo, registrazione o perdita di focus della finestra."}
+                    "Rilevata pressione tasti di cattura (Win/Shift/Ctrl/PrintScreen) o passaggio a un programma esterno fuori dalla finestra."}
                 </p>
                 <p className="text-[11px] text-neutral-400 mt-2">
-                  Per tutelare l&apos;esclusività delle creazioni artigianali, le fotografie vengono oscurate automaticamente durante tentativi di salvataggio o registrazione.
+                  Per impedire screenshot e registrazioni esterne dei modelli, la vetrina si oscura istantaneamente quando la finestra perde il focus o vengono premuti tasti di cattura.
                 </p>
               </div>
 
@@ -320,11 +430,12 @@ export function PhotoProtectionShield({
 }
 
 /**
- * Componente Immagine Corazzata Anti-Salvataggio e Anti-Registrazione
- * - Impedisce tasto destro, trascinamento e "Salva immagine" su iOS/Android/Desktop
- * - Applica un velo trasparente intercettore sopra il nodo <img>
- * - Applica una filigrana forense dinamica in movimento (anti-registrazione esterna)
- * - Oscura istantaneamente il fotogramma (brightness-0 blur-2xl) in caso di trigger dello Scudo
+ * Componente Immagine Corazzata Anti-Screenshot & Anti-Registrazione Video
+ * 1. Oscuramento 0ms appena isShieldTriggered o isTempMasked diventa true (su keydown di Shift/Win/Ctrl o uscita mouse/focus)
+ * 2. Modalità "Lente Anti-Video" (loupeMode): l'immagine di base è criptata/sfocata e solo un cerchio (lente d'ispezione)
+ *    sotto il cursore o sotto il dito rivela i dettagli del gioiello/modello -> così neppure una registrazione video
+ *    già avviata in background (OBS o registrazione schermo telefono) può mai catturare il modello intero!
+ * 3. Filigrana Forense Dinamica in movimento continuo (shimmer anti-telecamera esterna)
  */
 export function ProtectedModelImage({
   src,
@@ -333,6 +444,7 @@ export function ProtectedModelImage({
   style,
   watermarkOverride,
   forceWatermark,
+  forceLoupe,
 }: {
   src: string;
   alt: string;
@@ -340,49 +452,148 @@ export function ProtectedModelImage({
   style?: React.CSSProperties;
   watermarkOverride?: string;
   forceWatermark?: boolean;
+  forceLoupe?: boolean;
 }) {
-  const { isShieldTriggered, watermarkText, showWatermark } = usePhotoProtection();
+  const {
+    isShieldTriggered,
+    isTempMasked,
+    loupeMode,
+    watermarkText,
+    showWatermark,
+  } = usePhotoProtection();
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [pointerPos, setPointerPos] = useState<{ x: number; y: number } | null>(
+    null
+  );
+  const [phase, setPhase] = useState(0);
+
+  const isBlackedOut = isShieldTriggered || isTempMasked;
+  const activeLoupe = forceLoupe ?? loupeMode;
   const displayWatermark = forceWatermark ?? showWatermark;
   const label = watermarkOverride || watermarkText;
 
+  // Movimento ciclico della filigrana forense per disturbare codec di registrazione video
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPhase((p) => (p + 1) % 4);
+    }, 1400);
+    return () => clearInterval(interval);
+  }, []);
+
+  const updatePointer = (clientX: number, clientY: number) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    setPointerPos({
+      x: clientX - rect.left,
+      y: clientY - rect.top,
+    });
+  };
+
   return (
     <div
+      ref={containerRef}
       data-protected-photo="true"
       onContextMenu={(e) => e.preventDefault()}
       onDragStart={(e) => e.preventDefault()}
-      className="relative w-full h-full overflow-hidden select-none"
+      onMouseMove={(e) => {
+        if (activeLoupe) updatePointer(e.clientX, e.clientY);
+      }}
+      onMouseLeave={() => setPointerPos(null)}
+      onTouchStart={(e) => {
+        if (e.touches.length === 1 && activeLoupe) {
+          updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+        } else if (e.touches.length > 1) {
+          setPointerPos(null);
+        }
+      }}
+      onTouchMove={(e) => {
+        if (e.touches.length === 1 && activeLoupe) {
+          updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+        } else {
+          setPointerPos(null);
+        }
+      }}
+      onTouchEnd={() => setPointerPos(null)}
+      onTouchCancel={() => setPointerPos(null)}
+      className="relative w-full h-full overflow-hidden select-none bg-black"
     >
-      {/* Immagine Reale (oscurata a livello di pixel se lo scudo scatta) */}
-      <img
-        src={src}
-        alt={alt}
-        draggable={false}
-        loading="lazy"
-        className={`showly-protected-media ${className} ${
-          isShieldTriggered ? "blur-3xl brightness-0 opacity-0" : ""
-        }`}
-        style={style}
-      />
+      {/* Se scatta il blocco preventivo (Shift/Win/Blur/Screenshot), non renderizza proprio i pixel dell'immagine! */}
+      {!isBlackedOut ? (
+        <>
+          {/* Strato Base: se Lente Anti-Video è attiva, il modello intero resta sfocato/protetto */}
+          <img
+            src={src}
+            alt={alt}
+            draggable={false}
+            loading="lazy"
+            className={`showly-protected-media ${className} ${
+              activeLoupe ? "blur-xl brightness-50 scale-105" : ""
+            }`}
+            style={style}
+          />
 
-      {/* Pattern Anti-Moiré & Filigrana Forense Dinamica contro Registrazioni Esterne / Telecamere */}
-      {displayWatermark && !isShieldTriggered && (
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 z-10 pointer-events-none overflow-hidden flex flex-col justify-between p-3 opacity-25"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(-32deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 18px)",
-          }}
-        >
-          <div className="flex justify-between items-center text-[8px] font-mono uppercase tracking-[0.2em] text-white/70 -rotate-12 translate-y-4 select-none">
-            <span>{label}</span>
-          </div>
-          <div className="flex justify-center items-center text-[9px] font-mono uppercase tracking-[0.22em] text-amber-200/80 -rotate-12 select-none text-center">
-            <span>🔒 {label}</span>
-          </div>
-          <div className="flex justify-end items-center text-[8px] font-mono uppercase tracking-[0.2em] text-white/70 -rotate-12 -translate-y-4 select-none">
-            <span>VIETATA LA COPIA • SHOWLY VAULT</span>
-          </div>
+          {/* Strato Lente d'Ispezione Anti-Registrazione Video (visibile solo sotto il dito/cursore!) */}
+          {activeLoupe && pointerPos && (
+            <img
+              src={src}
+              alt={alt}
+              draggable={false}
+              className={`showly-protected-media absolute inset-0 ${className}`}
+              style={{
+                ...style,
+                clipPath: `circle(88px at ${pointerPos.x}px ${pointerPos.y}px)`,
+                WebkitClipPath: `circle(88px at ${pointerPos.x}px ${pointerPos.y}px)`,
+              }}
+            />
+          )}
+
+          {/* Indicatore Lente quando l'utente non sta toccando la card */}
+          {activeLoupe && !pointerPos && (
+            <div className="absolute inset-0 z-15 flex flex-col items-center justify-center p-4 text-center pointer-events-none">
+              <div className="w-10 h-10 rounded-full bg-black/75 border border-amber-400/50 text-amber-300 flex items-center justify-center mb-2 shadow-lg">
+                <Eye className="w-5 h-5" />
+              </div>
+              <span className="px-3 py-1 rounded-full bg-black/80 border border-white/15 text-[10px] font-bold uppercase tracking-wider text-amber-200">
+                Passa o tieni premuto per ispezionare
+              </span>
+            </div>
+          )}
+
+          {/* Filigrana Forense Dinamica & Griglia Anti-Cattura Video */}
+          {displayWatermark && (
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 z-10 pointer-events-none overflow-hidden flex flex-col justify-between p-3 opacity-35 transition-transform duration-700"
+              style={{
+                backgroundImage:
+                  "repeating-linear-gradient(-32deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 16px)",
+              }}
+            >
+              <div
+                className={`flex justify-between items-center text-[8px] font-mono uppercase tracking-[0.2em] text-white/80 -rotate-12 select-none transition-all duration-500 ${
+                  phase % 2 === 0 ? "translate-x-2 translate-y-3" : "-translate-x-2 translate-y-5"
+                }`}
+              >
+                <span>{label}</span>
+              </div>
+              <div
+                className={`flex justify-center items-center text-[9px] font-mono uppercase tracking-[0.22em] text-amber-200/90 -rotate-12 select-none text-center transition-all duration-500 ${
+                  phase < 2 ? "translate-y-1" : "-translate-y-2"
+                }`}
+              >
+                <span>🔒 {label}</span>
+              </div>
+              <div className="flex justify-end items-center text-[8px] font-mono uppercase tracking-[0.2em] text-white/80 -rotate-12 -translate-y-3 select-none">
+                <span>PROPRIETÀ PROTETTA • VIETATA LA COPIA</span>
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        /* Oscuramento Totale Istantaneo (0ms) */
+        <div className="w-full h-full bg-black flex items-center justify-center">
+          <Lock className="w-8 h-8 text-amber-400/40" />
         </div>
       )}
 

@@ -245,6 +245,7 @@ export default function CassaforteClientePage({
     <PhotoProtectionShield
       enabled={true}
       strictFocusLock={true}
+      defaultLoupeMode={true}
       watermarkText={`RISERVATO: ${
         invito?.nomeDestinatario?.toUpperCase() || "OSPITE VIP"
       } • #${invito?.token || token}`}
