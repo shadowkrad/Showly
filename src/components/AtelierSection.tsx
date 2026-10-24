@@ -2,6 +2,7 @@
 
 import { MapPin, Clock, Compass } from "lucide-react";
 import { ShowlyConfig } from "@/lib/config";
+import { ProtectedModelImage } from "@/components/PhotoProtectionShield";
 
 interface AtelierSectionProps {
   config: ShowlyConfig;
@@ -29,12 +30,11 @@ export default function AtelierSection({
         >
           {/* Foto Bottega Still-Life / Banco da lavoro */}
           <div className={isMobilePreview ? "" : "lg:col-span-6 relative"}>
-            <div className="relative aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-              <img
+            <div className="relative aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black">
+              <ProtectedModelImage
                 src={config.atelier.photoUrl}
                 alt="La Bottega"
                 className="w-full h-full object-cover object-center brightness-90 hover:scale-105 transition-transform duration-700"
-                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
 

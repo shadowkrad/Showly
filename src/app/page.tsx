@@ -8,7 +8,10 @@ import AtelierSection from "@/components/AtelierSection";
 import ReserveModal from "@/components/ReserveModal";
 import Footer from "@/components/Footer";
 import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
-import { PhotoProtectionShield } from "@/components/PhotoProtectionShield";
+import {
+  PhotoProtectionShield,
+  ProtectedModelImage,
+} from "@/components/PhotoProtectionShield";
 import { DEFAULT_SHOWLY_CONFIG, ShowlyConfig } from "@/lib/config";
 
 export default function HomePage() {
@@ -51,12 +54,14 @@ export default function HomePage() {
       <Header config={config} onOpenReserve={handleOpenReserve} />
 
       {/* 2. Hero di Campagna a Tutto Campo */}
-      <header className="relative w-full min-h-[64vh] sm:min-h-[82vh] flex items-end pb-12 sm:pb-24 pt-20 overflow-hidden border-b border-white/5">
-        <img
-          src={config.hero.imageUrl}
-          alt={config.brand.name}
-          className="absolute inset-0 w-full h-full object-cover object-center brightness-90 scale-100 hover:scale-105 transition-transform duration-1000"
-        />
+      <header className="relative w-full min-h-[64vh] sm:min-h-[82vh] flex items-end pb-12 sm:pb-24 pt-20 overflow-hidden border-b border-white/5 bg-black">
+        <div className="absolute inset-0 w-full h-full">
+          <ProtectedModelImage
+            src={config.hero.imageUrl}
+            alt={config.brand.name}
+            className="w-full h-full object-cover object-center brightness-90 scale-100 hover:scale-105 transition-transform duration-1000"
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-t from-luxe-black via-luxe-black/35 to-black/25"></div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 w-full flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-6">
