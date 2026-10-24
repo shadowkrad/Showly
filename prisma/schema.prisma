@@ -118,3 +118,35 @@ model AccessLog {
   isNewDevice  Boolean  @default(false)
   createdAt    DateTime @default(now())
 }
+
+model ClienteNewsletter {
+  id              String   @id @default(cuid())
+  nome            String?
+  email           String?
+  telefono        String?  // Per comunicazioni e inviti WhatsApp
+  sponsor         String?  @default("Diretto") // Canale/Sponsor: "Instagram Adv", "Influencer @aurora", "Gala Arezzo", "Passaparola", ecc.
+  campagna        String?  // Campagna specifica di provenienza
+  codiceReferral  String?  // Parametro ref referral (?ref=...)
+  stato           String   @default("ATTIVO") // "ATTIVO" | "VIP" | "LEAD" | "DISISCRITTO"
+  note            String?
+  consensoPrivacy Boolean  @default(true)
+  ipIscrizione    String?
+  ultimoContatto  DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model CampagnaNewsletter {
+  id                String    @id @default(cuid())
+  titolo            String
+  oggettoEmail      String?
+  messaggio         String
+  sponsorCorrelato  String?   // Sponsor/Brand partner associato alla newsletter
+  canale            String    @default("EMAIL") // "EMAIL" | "WHATSAPP" | "ENTRAMBI"
+  destinatariFiltro String    @default("TUTTI") // "TUTTI" | "SOLO_VIP" | "PER_SPONSOR"
+  numeroDestinatari Int       @default(0)
+  stato             String    @default("BOZZA") // "BOZZA" | "INVIATA"
+  dataInviato       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}

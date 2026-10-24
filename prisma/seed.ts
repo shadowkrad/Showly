@@ -75,6 +75,81 @@ async function main() {
   });
   console.log("==> Inserite 2 prenotazioni camerino di esempio");
 
+  // 5. Clienti Newsletter & Registro Sponsorizzazioni
+  await prisma.clienteNewsletter.deleteMany({});
+  await prisma.clienteNewsletter.createMany({
+    data: [
+      {
+        nome: "Sofia Fontana",
+        email: "sofia.fontana@example.com",
+        telefono: "+39 349 1122334",
+        sponsor: "Instagram Adv",
+        campagna: "Campagna Solitari Autunno",
+        codiceReferral: "ig_autunno26",
+        stato: "VIP",
+        note: "Interessata a parure in platino e diamanti",
+      },
+      {
+        nome: "Marco Rinaldi",
+        email: "marco.rinaldi@example.com",
+        telefono: "+39 340 9988776",
+        sponsor: "Influencer @auroragems",
+        campagna: "Stories IG Ottobre",
+        codiceReferral: "aurora_vip",
+        stato: "ATTIVO",
+        note: "Iscritto dopo aver visto la storia still-life",
+      },
+      {
+        nome: "Beatrice Galli",
+        email: "beatrice.galli@example.com",
+        telefono: "+39 338 5544332",
+        sponsor: "Gala Arezzo 2026",
+        campagna: "Sponsorizzazione Serata di Gala",
+        codiceReferral: "gala2026",
+        stato: "VIP",
+        note: "Incontrata allo stand VIP",
+      },
+      {
+        nome: "Leonardo Conti",
+        email: "leonardo.conti@example.com",
+        telefono: "+39 347 6655443",
+        sponsor: "Passaparola",
+        campagna: "Referral Clienti",
+        stato: "ATTIVO",
+        note: "Amico di famiglia di un cliente storico",
+      },
+      {
+        nome: "Elena Moretti",
+        email: "elena.moretti@example.com",
+        telefono: "+39 335 1239874",
+        sponsor: "Facebook Ads",
+        campagna: "Promo Fedi Matrimonio",
+        codiceReferral: "fb_fedi",
+        stato: "LEAD",
+        note: "Preventivo per matrimonio estate 2027",
+      },
+    ],
+  });
+  console.log("==> Inseriti 5 clienti newsletter con tracciamento sponsorizzazioni");
+
+  // 6. Campagna Newsletter d'Esempio
+  await prisma.campagnaNewsletter.deleteMany({});
+  await prisma.campagnaNewsletter.create({
+    data: {
+      titolo: "Anteprima Privata Nuova Collezione Diamanti",
+      oggettoEmail: "💎 Invito Esclusivo: Nuova Collezione in Bottega per i nostri VIP",
+      messaggio:
+        "Gentile ospite, siamo lieti di presentarle in anteprima assoluta la nostra nuova linea di creazioni d'autore, realizzata interamente a mano nel nostro atelier. La invitiamo a visionare i pezzi esclusivi o prenotare una visita privata in bottega.",
+      sponsorCorrelato: "Gala Arezzo 2026",
+      canale: "ENTRAMBI",
+      destinatariFiltro: "SOLO_VIP",
+      numeroDestinatari: 2,
+      stato: "INVIATA",
+      dataInviato: new Date(),
+    },
+  });
+  console.log("==> Inserita 1 campagna newsletter dimostrativa");
+
   console.log("==> Seeding completato con successo!");
 }
 

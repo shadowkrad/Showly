@@ -31,19 +31,36 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
   - **Filigrana Forense Nominativa Anti-Leak per Smartphone (Web & PWA)**: nella Cassaforte Privata (`/cassaforte/[token]`), le foto contengono una filigrana diagonale semitrasparente e un micro-badge elegante recante il nome del destinatario e il codice univoco dell'invito (*es. `RISERVATO: MARIO ROSSI • #VIP-AURORA-2026`*). Se un cliente scatta uno screenshot con i tasti fisici del telefono (Power + Volume), l'immagine catturata rimarrà indelebilmente marchiata con la sua identità, disincentivando e tracciando qualsiasi tentativo di inoltro o copia non autorizzata.
   - **Wrapper Nativo Hardware-Level con `FLAG_SECURE` (Android / iOS)**: predisposta configurazione nativa Capacitor con `WindowManager.LayoutParams.FLAG_SECURE` in `MainActivity.java` (Android) e blocco cattura/registrazione in `AppDelegate.swift` (iOS). Quando compilata o distribuita come app nativa, il sistema operativo dello smartphone rifiuta fisicamente la combinazione tasti Volume+Power e le registrazioni dello schermo, restituendo un fotogramma 100% nero identico a Disney+, Netflix e alle applicazioni bancarie.
 
-### 4. Dashboard, Impostazioni & Live Showcase Studio Unificati
+### 4. Registro Clienti, Newsletter & Tracciamento Sponsorizzazioni (`/dashboard/clienti`)
+- **Registro Clienti & Lead Omnicanale (`ClienteNewsletter`)**:
+  - Rubrica centralizzata dei contatti acquisiti dalla vetrina pubblica, dal passaparola o inseriti manualmente dal personale dell'Atelier.
+  - Informazioni anagrafiche complete: nome, email, recapito WhatsApp, stato (`VIP`, `ATTIVO`, `LEAD`, `DISISCRITTO`), note interne riservate e storico data iscrizione/ultimo contatto.
+- **Tracciamento Avanzato delle Sponsorizzazioni & Canali di Provenienza**:
+  - Tracciamento automatico del canale o sponsor (*es. `Instagram Adv`*, *`Influencer @auroragems`*, *`Gala Arezzo 2026`*, *`Passaparola`*) sia da inserimento gestionale sia tramite rilevamento istantaneo dei parametri URL (`?sponsor=...`, `?utm_source=...`, `?ref=...`).
+  - **Pannello KPI & Rendimento Sponsorizzazioni**: calcolo in tempo reale del numero di iscritti per ciascun partner/campagna, percentuale sul totale e tasso di conversione in clienti VIP e Lead.
+  - Filtri dinamici istantanei: ricerca testuale e selezione sponsor per analizzare quali collaborazioni portano il maggior valore alla bottega.
+- **Iscrizione Club Privato in Vetrina Pubblica (`Footer.tsx`)**:
+  - Box d'iscrizione raffinato in stile atelier d'alta gioielleria nel footer della vetrina per raccogliere email o WhatsApp di ospiti interessati a selezioni riservate.
+  - Riconoscimento automatico e feedback visivo dell'invito partner in caso di arrivo da link sponsorizzato.
+- **Invio Newsletter & Broadcast d'Autore (`CampagnaNewsletter`)**:
+  - Compositore messaggi esclusivi con selezione del canale (*Email*, *WhatsApp Broadcast*, *Entrambi*) e profilazione selettiva dei destinatari (*Tutti gli iscritti*, *Solo Clienti VIP*, *Solo iscritti da uno specifico Sponsor Partner*).
+  - Storico cronologico di tutte le campagne inviate con monitoraggio del volume di destinatari raggiunti.
+- **Integrazione Diretta con la Cassaforte Privata**:
+  - Azione rapida 1-Click dal registro clienti per generare immediatamente un invito protetto alla Cassaforte VIP precompilato con il nome e il recapito del cliente selezionato.
+
+### 5. Dashboard, Impostazioni & Live Showcase Studio Unificati
 - **Impostazioni Showly (`/dashboard/impostazioni`)**: layout standard Taaaac a 2 colonne con 6 sezioni verticali (*Bottega & Vetrina*, *Camerino 24h & Prezzi*, *Dominio & SSL*, *Email & Notifiche*, *Dispositivi PWA*, *Aspetto & Brand*).
 - **Hub Sincronizzazione Omnicanale v1.1.0**: sincronizzazione 1-Click degli orari della bottega con Google Maps, Meta (Facebook & IG), WhatsApp Business e Review Booster.
 - **Live Showcase Studio Split-Screen**: editor grafico in tempo reale con pannello sinistro di configurazione, upload immagini WebP e simulatore destro interattivo con switch tra Smartphone 390px e Desktop.
 
-### 4. Responsività Mobile Totale & Icona Ufficiale Personalizzata Showly
+### 6. Responsività Mobile Totale & Icona Ufficiale Personalizzata Showly
 - **Icona Standard Modulo Showly (`ShowlyModuleIcon` & `public/icon.svg`)**: grafica ufficiale su squircle Taaaac (sfondo onice/antracite con cornice oro champagne, diamante taglio brillante sfaccettato su piedistallo espositivo e scintilla d'autore) integrata nell'Header della vetrina pubblica, nel Footer, nella pagina di Login, nella Sidebar gestionale (`TaaaacLogo` + card Atelier) e negli asset PWA/Favicon (`icon.svg`, `apple-touch-icon.png`, `icons/icon-192.png`, `icons/icon-512.png`, `manifest.json`).
 - **Ottimizzazione Mobile, Pallino Flottante WhatsApp & Simulatore 390px (`isMobilePreview`)**:
   - Sostituita la barra verde WhatsApp in fondo alla sezione Bottega con il **Pallino Flottante Standard WhatsApp (`FloatingWhatsAppWidget.tsx`)** in basso a destra con animazione pulse e tooltip *"Scrivici su WhatsApp 💎"*, allineato a tutti gli altri moduli della suite Taaaac.
   - Risolto il disallineamento nel simulatore smartphone 390px (in `Impostazioni -> Aspetto & Brand` e `Live Showcase Studio`) dove le media query desktop (`md:`, `sm:`, `lg:`) causavano l'andata a capo del titolo, la fuoriuscita orizzontale delle voci menu e la comparsa delle barre di scorrimento bianche di Windows.
   - Introdotto menu mobile hamburger a tendina (`Header.tsx`), card calibrate per schermi compatti (`ShowGallery.tsx`), griglia a colonna singola (`CatalogGrid.tsx`, `AtelierSection.tsx`) e rimozione totale dello scroll orizzontale (`overflow-x-hidden` con scrollbar sottile trasparente).
 
-### 5. Pacchetto Sicurezza Integrato (v1.0.6)
+### 7. Pacchetto Sicurezza Integrato (v1.0.6)
 - Autenticazione a due fattori (TOTP MFA RFC 6238) con QR code e 8 codici di emergenza.
 - Rate limiting anti brute-force (blocco 15 min dopo 5 fallimenti consecutivi).
 - Protezione invisibile bot Honeypot.

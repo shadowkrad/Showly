@@ -16,6 +16,7 @@ import {
   Sparkles,
   Package,
   Lock,
+  Users,
 } from "lucide-react";
 import UserSecurityModal from "@/components/UserSecurityModal";
 import { TaaaacLogo, ShowlyModuleIcon } from "@/components/common/TaaaacLogo";
@@ -60,6 +61,11 @@ export default function DashboardLayout({
       href: "/dashboard/cassaforte",
       label: "Cassaforte Privata VIP",
       icon: Lock,
+    },
+    {
+      href: "/dashboard/clienti",
+      label: "Clienti & Newsletter",
+      icon: Users,
     },
     {
       href: "/dashboard/studio",
