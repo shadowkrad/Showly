@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import BannerPreavvisoFestivita from "@/components/dashboard/BannerPreavvisoFestivita";
 import {
   Clock,
   CheckCircle2,
@@ -93,6 +94,8 @@ export default function DashboardOverviewPage() {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-12">
+      {/* Banner Preavviso Festività Italiane */}
+      <BannerPreavvisoFestivita />
       {/* Intestazione Principale Standard Taaaac */}
       <div className="bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>

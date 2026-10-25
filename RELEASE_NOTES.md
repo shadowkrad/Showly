@@ -68,3 +68,8 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - Tracciamento dispositivi fidati e audit log accessi.
 - Lucchetto discreto d'accesso gestionale (`<Lock />`) posizionato nell'Header principale in alto a destra (allineato allo standard degli altri moduli Taaaac) e rimosso dal footer.
 - Accesso Diretto Demo 1-Click (`👉 Accedi alla Demo (1-Click)`) attivo esclusivamente sull'ambiente dimostrativo (`cliente-demo` / Vercel), con protezione middleware delle rotte `/dashboard` e richiesta obbligatoria di credenziali per i tenant reali in produzione.
+
+### 8. 🎄 Calendario Festività Nazionali, Aperture Straordinarie Showroom & Preavviso a 7 Giorni
+- **Motore Festività Nazionali Italiane con Calcolo Astronomico della Pasqua**: Calcolo dinamico e riconoscimento delle 12 festività ufficiali italiane (Natale, Capodanno, Epifania, Pasqua, Lunedì dell'Angelo, 25 Aprile, 1 Maggio, 2 Giugno, Ferragosto, Tutti i Santi, Immacolata, Santo Stefano) tramite algoritmo di Meeus/Jones/Butcher.
+- **Nuovo Pannello "Orari & Festività" in Dashboard (/dashboard/orari)**: Gestione dedicata degli orari settimanali di visita showroom e bottega, date speciali (chiusure per ferie/inventario o aperture straordinarie per eventi shopping natalizio, fiere d'arte o trunk show privati).
+- **Banner Intelligente di Preavviso (7 Giorni di Anticipo)**: Banner proattivo in cima alla dashboard camerino che segnala con una settimana di anticipo l'arrivo di ogni festività, indicando se l'atelier risulterà aperto o chiuso e fornendo l'accesso 1-click per programmare aperture straordinarie.

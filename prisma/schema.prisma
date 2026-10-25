@@ -37,7 +37,23 @@ model Impostazioni {
   indirizzo       String?  @default("Via del Corso 24, Arezzo")
   mostraPrezzi    Boolean  @default(true) // Flag globale visibilità prezzi
   showcaseConfig  String   @default("{}") // JSON ShowlyConfig 100% editabile
+  rispettaFestivitaNazionali Boolean @default(true)
   updatedAt       DateTime @updatedAt
+}
+
+model EccezioneCalendario {
+  id             String   @id @default(cuid())
+  data           String   @unique // YYYY-MM-DD
+  titolo         String
+  tipo           String   @default("CHIUSURA") // CHIUSURA | APERTURA_STRAORDINARIA | ORARIO_SPECIALE
+  isAperto       Boolean  @default(false)
+  orarioApertura String?
+  orarioChiusura String?
+  pausaInizio    String?
+  pausaFine      String?
+  note           String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model ProdottoCreazione {
