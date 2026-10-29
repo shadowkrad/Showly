@@ -20,12 +20,12 @@ export const metadata: Metadata = {
     "Vetrina d'autore per creazioni artigianali. Esplora le collezioni still-life e riserva la tua prova gratuita in bottega.",
   icons: {
     icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/api/pwa-icon?size=192", sizes: "192x192", type: "image/png" },
       { url: "/favicon.ico", sizes: "any" },
     ],
-    apple: "/apple-touch-icon.png",
+    apple: [{ url: "/api/pwa-icon?size=180", sizes: "180x180", type: "image/png" }],
   },
-  manifest: "/manifest.json",
+  manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -47,9 +47,9 @@ export default function RootLayout({
   return (
     <html lang="it" className={`${plusJakarta.variable} ${cormorant.variable}`}>
       <head>
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="icon" href="/api/pwa-icon?size=192" sizes="any" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/api/pwa-icon?size=180" />
+        <link rel="manifest" href="/manifest.webmanifest" />
       </head>
       <body className="bg-luxe-black text-luxe-light selection:bg-amber-400 selection:text-black antialiased min-h-screen flex flex-col overflow-x-hidden">
         {children}
