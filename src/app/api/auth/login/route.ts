@@ -10,8 +10,6 @@ import {
   checkAccountLockout,
   recordFailedAccountAttempt,
   resetAccountAttempts,
-  verifyTotpToken,
-  verifyAndConsumeBackupCode,
   logAccessAndCheckNewDevice,
 } from "@/lib/security";
 
@@ -23,15 +21,16 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
+  const host = req.headers.get("host") || "";
   const userAgent = req.headers.get("user-agent") || null;
 
   try {
     const body = await req.json();
-    const { email, password, honeypot, mfaToken, isBackupCode, demo } = body;
+    const { email, password, pin, honeypot, demo } = body;
 
     // 0. Accesso Diretto 1-Click (SOLO ed esclusivamente per l'ambiente Demo Vercel / cliente-demo)
     if (demo === true) {
-      if (!isDemoEnvironment(req.headers.get("host"))) {
+      if (!isDemoEnvironment(host)) {
         return NextResponse.json(
           { error: "Accesso rapido demo consentito solo sull'ambiente dimostrativo." },
           { status: 403 }
@@ -47,7 +46,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Accesso non autorizzato" }, { status: 403 });
     }
 
-    // 2. Controllo Rate Limit IP (Sliding Window 15 min)
+    // 2. Controllo Rate Limit IP
     const ipCheck = checkIpRateLimit(ip);
     if (!ipCheck.allowed) {
       return NextResponse.json(
@@ -60,95 +59,130 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!email || !password) {
-      return NextResponse.json({ error: "Email e password obbligatorie" }, { status: 400 });
-    }
+    let authSuccess = false;
+    let authRole = "ADMIN";
+    let operatorName = "Titolare";
 
-    // 3. Controllo Account Lockout
-    const accountCheck = await checkAccountLockout(email);
-    if (accountCheck.locked) {
-      return NextResponse.json(
-        {
-          error: `Questo account è temporaneamente bloccato per sicurezza. Riprova tra ${Math.ceil(
-            (accountCheck.retryAfterSeconds || 900) / 60
-          )} minuti.`,
-        },
-        { status: 423 }
-      );
-    }
+    // ── MODALITÀ A: TITOLARE CON EMAIL + PASSWORD ──
+    if (email && password) {
+      const cleanEmail = String(email).trim().toLowerCase();
+      const rawPassword = String(password);
 
-    // 4. Ricerca Utente nel DB
-    let user = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    let passwordValid = false;
-
-    if (user) {
-      passwordValid = await bcrypt.compare(password, user.passwordHash);
-      if (!passwordValid && isDemoEnvironment(req.headers.get("host"))) {
-        passwordValid = verifyAdminPasswordOrPin(password);
-      }
-    } else {
-      // In demo o primo avvio, supporta credenziali master se create
-      if (isDemoEnvironment(req.headers.get("host")) && verifyAdminPasswordOrPin(password)) {
-        passwordValid = true;
-      }
-    }
-
-    if (!passwordValid) {
-      recordFailedIpAttempt(ip);
-      await recordFailedAccountAttempt(email);
-      if (user) {
-        await logAccessAndCheckNewDevice(user.id, "LOGIN_FAILED", ip, userAgent);
-      }
-      return NextResponse.json({ error: "Credenziali non valide" }, { status: 401 });
-    }
-
-    // 5. Controllo MFA se abilitato per l'utente
-    if (user && user.mfaEnabled && user.mfaSecret) {
-      if (!mfaToken) {
-        return NextResponse.json({ mfaRequired: true });
-      }
-
-      let mfaSuccess = false;
-      if (isBackupCode) {
-        const backupResult = verifyAndConsumeBackupCode(mfaToken, user.mfaBackupCodes);
-        if (backupResult.valid) {
-          mfaSuccess = true;
-          await prisma.user.update({
-            where: { id: user.id },
-            data: { mfaBackupCodes: backupResult.updatedJson },
-          });
-        }
-      } else {
-        mfaSuccess = verifyTotpToken(user.mfaSecret, mfaToken);
-      }
-
-      if (!mfaSuccess) {
-        recordFailedIpAttempt(ip);
-        await logAccessAndCheckNewDevice(user.id, "MFA_FAILED", ip, userAgent);
+      // Controllo Account Lockout locale
+      const accountCheck = await checkAccountLockout(cleanEmail);
+      if (accountCheck.locked) {
         return NextResponse.json(
-          { error: isBackupCode ? "Codice di emergenza non valido" : "Codice 2FA non valido" },
+          {
+            error: `Questo account è temporaneamente bloccato per sicurezza. Riprova tra ${Math.ceil(
+              (accountCheck.retryAfterSeconds || 900) / 60
+            )} minuti.`,
+          },
+          { status: 423 }
+        );
+      }
+
+      // 1. Verifica centralizzata su Taaaac Core
+      const coreApiUrl = process.env.TAAAAC_CORE_API_URL?.trim() || "https://taaaac.eu";
+      const tenantDomain = process.env.TAAAAC_TENANT_DOMAIN || host;
+      const subdomain = tenantDomain ? tenantDomain.split(".")[0].toLowerCase() : null;
+
+      try {
+        const coreRes = await fetch(`${coreApiUrl}/api/internal/auth/verify-tenant-user`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: cleanEmail,
+            password: rawPassword,
+            subdomain,
+          }),
+        });
+
+        if (coreRes.ok) {
+          const coreData = await coreRes.json();
+          if (coreData.valid) {
+            authSuccess = true;
+            authRole = coreData.user?.role || "ADMIN";
+            operatorName = coreData.user?.name || cleanEmail;
+          }
+        }
+      } catch (err) {
+        console.warn("Verifica centralizzata Taaaac Core non disponibile, tento fallback locale:", err);
+      }
+
+      // 2. Fallback locale DB
+      if (!authSuccess) {
+        const localUser = await prisma.user.findUnique({
+          where: { email: cleanEmail },
+        });
+
+        if (localUser && (await bcrypt.compare(rawPassword, localUser.passwordHash))) {
+          authSuccess = true;
+          authRole = localUser.ruolo || "ADMIN";
+          operatorName = localUser.nome || cleanEmail;
+        } else if (verifyAdminPasswordOrPin(rawPassword)) {
+          authSuccess = true;
+          authRole = "ADMIN";
+          operatorName = "Amministratore Showroom";
+        }
+      }
+
+      if (!authSuccess) {
+        recordFailedIpAttempt(ip);
+        await recordFailedAccountAttempt(cleanEmail);
+        return NextResponse.json(
+          { error: "Email o password errati. Verifica le credenziali ricevute via email." },
           { status: 401 }
         );
       }
+
+      await resetAccountAttempts(cleanEmail);
+    }
+    // ── MODALITÀ B: STAFF CON PIN RAPIDO ──
+    else if (pin) {
+      const cleanPin = String(pin).trim();
+      const masterPin = process.env.ADMIN_PIN?.trim();
+
+      if (masterPin && cleanPin === masterPin) {
+        authSuccess = true;
+        authRole = "STAFF";
+        operatorName = "Staff Showroom";
+      } else if (verifyAdminPasswordOrPin(cleanPin)) {
+        authSuccess = true;
+        authRole = "ADMIN";
+        operatorName = "Postazione Showroom";
+      } else {
+        recordFailedIpAttempt(ip);
+        return NextResponse.json(
+          { error: "PIN non valido o non riconosciuto." },
+          { status: 401 }
+        );
+      }
+    } else {
+      return NextResponse.json(
+        { error: "Inserisci email e password per accedere." },
+        { status: 400 }
+      );
     }
 
-    // 6. Accesso Riuscito: reset contatori e log
     resetIpAttempts(ip);
-    await resetAccountAttempts(email);
 
-    if (user) {
-      await logAccessAndCheckNewDevice(user.id, "LOGIN_SUCCESS", ip, userAgent);
-    }
-
-    // 7. Imposta sessione
+    // Salva sessione utente
     await setAdminSession();
 
-    return NextResponse.json({ success: true });
-  } catch (err: any) {
-    console.error("Errore login:", err);
+    // Rilevamento nuovo dispositivo
+    try {
+      await logAccessAndCheckNewDevice(email || "staff-pin", "LOGIN_SUCCESS", ip, userAgent);
+    } catch (e) {
+      console.error("[Login Log Error]", e);
+    }
+
+    return NextResponse.json({
+      success: true,
+      role: authRole,
+      operator: operatorName,
+    });
+  } catch (error: any) {
+    console.error("[Login API Error]", error);
     return NextResponse.json({ error: "Errore interno del server" }, { status: 500 });
   }
 }
