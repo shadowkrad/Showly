@@ -1,3 +1,4 @@
+import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
@@ -53,6 +54,7 @@ export default function RootLayout({
       </head>
       <body className="bg-luxe-black text-luxe-light selection:bg-amber-400 selection:text-black antialiased min-h-screen flex flex-col overflow-x-hidden">
         {children}
+      <FloatingWhatsAppWidget />
       </body>
     </html>
   );
