@@ -120,6 +120,7 @@ export default function ShowlyImpostazioniPage() {
 
   // Refs per upload immagini
   const logoInputRef = useRef<HTMLInputElement | null>(null);
+  const faviconInputRef = useRef<HTMLInputElement | null>(null);
   const heroInputRef = useRef<HTMLInputElement | null>(null);
   const atelierInputRef = useRef<HTMLInputElement | null>(null);
 
