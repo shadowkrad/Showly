@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Award, Gift, Plus, Trash2, Sparkles, Percent, Gem, Crown } from "lucide-react";
+import { Award, Gift, Plus, Trash2, Sparkles, Percent, Gem, Crown, Smartphone } from "lucide-react";
+import FidelityCashierScanner from "./FidelityCashierScanner";
 
 export interface FidelityRewardItem {
   id: string;
@@ -368,6 +369,14 @@ export default function FidelitySettingsPanel({ data, onChange }: { data: Fideli
               </div>
             )}
           </div>
+
+          {/* Scanner & Cassa Fidelity Rapido */}
+          <FidelityCashierScanner
+            tenantName="Atelier & Gallery"
+            pointsPerEuro={data.pointsPerEuro || 1}
+            welcomeBonusPoints={data.welcomeBonusPoints || 25}
+            rewards={data.rewards || []}
+          />
         </>
       )}
     </div>

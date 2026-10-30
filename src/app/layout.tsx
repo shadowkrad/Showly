@@ -1,19 +1,6 @@
 import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["400", "600", "700"],
-});
 
 export const metadata: Metadata = {
   title: "Atelier Aurora — Bottega Orafa & Manifattura d'Autore",
@@ -46,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="it" className={`${plusJakarta.variable} ${cormorant.variable}`}>
+    <html lang="it">
       <head>
         <link rel="icon" href="/api/pwa-icon?size=192" sizes="any" />
         <link rel="apple-touch-icon" sizes="180x180" href="/api/pwa-icon?size=180" />
