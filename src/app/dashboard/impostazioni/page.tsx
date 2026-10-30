@@ -27,6 +27,7 @@ import {
   Plus,
   Laptop,
   RotateCcw,
+  Award,
 } from "lucide-react";
 import { DEFAULT_SHOWLY_CONFIG, ShowlyConfig } from "@/lib/config";
 import Header from "@/components/Header";
@@ -35,8 +36,10 @@ import CatalogGrid from "@/components/CatalogGrid";
 import AtelierSection from "@/components/AtelierSection";
 import Footer from "@/components/Footer";
 import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
+import TelegramSettingsPanel, { TelegramSettingsData } from "@/components/dashboard/TelegramSettingsPanel";
+import FidelitySettingsPanel, { FidelitySettingsData } from "@/components/dashboard/FidelitySettingsPanel";
 
-type SettingsTab = "bottega" | "camerino" | "dominio" | "email" | "dispositivi" | "aspetto";
+type SettingsTab = "bottega" | "camerino" | "dominio" | "email" | "telegram" | "fidelity" | "dispositivi" | "aspetto";
 type StudioSubTab = "hero" | "showgallery" | "catalogo" | "atelier";
 
 interface TabItem {
@@ -82,6 +85,22 @@ const TABS: TabItem[] = [
     description: "Canale email Taaaac Mail Engine e notifiche di conferma prenotazione al cliente",
   },
   {
+    id: "telegram",
+    label: "Telegram Hub & Staff",
+    shortLabel: "Telegram",
+    iconComponent: Send,
+    shortDescription: "Bot ed avvisi atelier",
+    description: "Notifiche prenotazioni prove e richieste private sul gruppo Telegram dello staff e One-Tap Connect",
+  },
+  {
+    id: "fidelity",
+    label: "Fidelity & Club",
+    shortLabel: "Club Aurora",
+    iconComponent: Award,
+    shortDescription: "Raccolta punti ed inviti",
+    description: "Fidelizzazione collezionisti con numero di telefono, catalogo esperienze VIP e sconti atelier",
+  },
+  {
     id: "dispositivi",
     label: "Dispositivi PWA",
     shortLabel: "Dispositivi",
@@ -108,6 +127,21 @@ export default function ShowlyImpostazioniPage() {
   const [syncingOmnichannel, setSyncingOmnichannel] = useState(false);
   const [lastSyncAt, setLastSyncAt] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  // Telegram & Fidelity State
+  const [telegramSettings, setTelegramSettings] = useState<TelegramSettingsData>({
+    enabled: false,
+    botToken: "",
+    botUsername: "",
+    staffChatId: "",
+  });
+
+  const [fidelitySettings, setFidelitySettings] = useState<FidelitySettingsData>({
+    enabled: false,
+    pointsPerEuro: 1,
+    welcomeBonusPoints: 15,
+    minPointsToRedeem: 60,
+    rewards: [],
+  });
 
   // Email Test State
   const [testEmail, setTestEmail] = useState("");
@@ -131,6 +165,8 @@ export default function ShowlyImpostazioniPage() {
         if (data && data.brand) {
           setConfig(data);
         }
+        if (data?.telegramSettings) setTelegramSettings(data.telegramSettings);
+        if (data?.fidelitySettings) setFidelitySettings(data.fidelitySettings);
       })
       .catch(() => {});
 
@@ -214,7 +250,7 @@ export default function ShowlyImpostazioniPage() {
       const res = await fetch("/api/config", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(config),
+        body: JSON.stringify({ ...config, telegramSettings, fidelitySettings }),
       });
       if (res.ok) {
         setFeedback({

@@ -38,6 +38,12 @@ model Impostazioni {
   mostraPrezzi    Boolean  @default(true) // Flag globale visibilità prezzi
   showcaseConfig  String   @default("{}") // JSON ShowlyConfig 100% editabile
   rispettaFestivitaNazionali Boolean @default(true)
+  telegramEnabled     Boolean   @default(false)
+  telegramBotToken    String?
+  telegramBotUsername String?
+  telegramStaffChatId String?
+  fidelityEnabled     Boolean   @default(false)
+  fidelityRules       String?   @default("{}")
   updatedAt       DateTime @updatedAt
 }
 
