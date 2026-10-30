@@ -17,6 +17,8 @@ import {
   Package,
   Lock,
   Users,
+  Gift,
+  Award,
 } from "lucide-react";
 import { TaaaacLogo, ShowlyModuleIcon } from "@/components/common/TaaaacLogo";
 
@@ -156,6 +158,50 @@ export default function DashboardLayout({
                 </Link>
               );
             })}
+
+            {/* Sezione Moduli Add-On Taaaac */}
+            <div className="pt-4 pb-1">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 pb-1 flex items-center justify-between">
+                <span>Moduli Attivi</span>
+                <span className="text-amber-400 font-extrabold text-[9px] bg-amber-500/10 px-1.5 py-0.5 rounded-full border border-amber-500/30">
+                  ⚡ Taaaac
+                </span>
+              </div>
+              <Link
+                href="/dashboard/gift-cards"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  isActive("/dashboard/gift-cards")
+                    ? "bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/25"
+                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <Gift className="w-4 h-4 shrink-0 text-amber-400" />
+                  <span className="truncate">Buoni Regalo</span>
+                </div>
+                <span className="text-[9px] px-1.5 py-0.5 rounded-md font-semibold bg-amber-500/20 text-amber-300">
+                  Voucher
+                </span>
+              </Link>
+              <Link
+                href="/dashboard/fedelta"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                  isActive("/dashboard/fedelta")
+                    ? "bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/25"
+                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                }`}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <Award className="w-4 h-4 shrink-0 text-amber-400" />
+                  <span className="truncate">Raccolta Punti</span>
+                </div>
+                <span className="text-[9px] px-1.5 py-0.5 rounded-md font-semibold bg-amber-500/20 text-amber-300">
+                  Fidelity
+                </span>
+              </Link>
+            </div>
 
             {/* Sezione Configurazione Standard Taaaac */}
             <div className="pt-4 pb-1">
