@@ -83,15 +83,15 @@ export default function Footer({ config, isMobilePreview = false }: FooterProps)
         <div className="max-w-3xl mx-auto text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-[10px] font-mono uppercase tracking-[0.2em]">
             <Sparkles className="w-3 h-3" />
-            <span>Club Privato & Newsletter</span>
+            <span>{config.footer.newsletterBadgeText || "Club Privato & Newsletter"}</span>
           </div>
 
           <div className="space-y-2">
             <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Selezioni Riservate & Inviti Esclusivi
+              {config.footer.newsletterTitle || "Selezioni Riservate & Inviti Esclusivi"}
             </h3>
             <p className="text-xs sm:text-sm text-luxe-sub max-w-xl mx-auto leading-relaxed">
-              Ricevi in anteprima le nuove collezioni d&apos;autore, gli inviti agli eventi e l&apos;accesso prioritario alla nostra Cassaforte Privata.
+              {config.footer.newsletterSubtitle || "Ricevi in anteprima le nuove collezioni d'autore, gli inviti agli eventi e l'accesso prioritario alla nostra Cassaforte Privata."}
             </p>
           </div>
 

@@ -4,6 +4,15 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 
 ---
 
+## Novità della Versione 1.0.8 (Hotfix / Patch)
+
+### 1. 🎨 Live Studio Completo & Vetrina 100% Personalizzabile
+- **Editing Totale Senza Campi Cablati**: Riprogettato completamente lo Studio Vetrina suddiviso in 6 tab funzionali (*Brand*, *ShowGallery*, *Atelier & Bottega*, *Azienda & Fisco*, *Catalogo*, *Footer & Newsletter*).
+- **Personalizzazione Box Newsletter**: Diciture, badge e testi di invito al Club Privato/Newsletter ora completamente configurabili dall'esercente con preview in tempo reale.
+- **Dati Atelier e Posizione Dinamici**: Orari feriali, sabato e domenica, indirizzo bottega e pulsante indicazioni stradali interamente gestiti dal pannello di controllo.
+
+---
+
 ## Novità della Versione 1.0.7 (Hotfix / Patch)
 
 ### 1. 🔐 Autenticazione Distinta: Email + Password Titolare & PIN Staff Showroom

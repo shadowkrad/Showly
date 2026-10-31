@@ -95,6 +95,9 @@ export interface ShowlyConfig {
     legalText: string;
     privacyPolicyLabel: string;
     lockAdminLabel: string;
+    newsletterBadgeText?: string;
+    newsletterTitle?: string;
+    newsletterSubtitle?: string;
   };
 }
 
