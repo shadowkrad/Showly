@@ -695,10 +695,23 @@ export default function LiveShowcaseStudioPage() {
 
               {/* Orari di Ricezione */}
               <div className="pt-2 border-t border-slate-200 space-y-3">
-                <h4 className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Orari di Ricezione &amp; Appuntamenti</span>
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Orari di Ricezione Showroom</span>
+                  </h4>
+                  <label className="flex items-center gap-1.5 cursor-pointer text-[10px] font-bold text-slate-600">
+                    <input
+                      type="checkbox"
+                      checked={config.atelier.showHours !== false}
+                      onChange={(e) =>
+                        setConfig({ ...config, atelier: { ...config.atelier, showHours: e.target.checked } })
+                      }
+                      className="h-3.5 w-3.5 rounded border-slate-300 text-amber-600 focus:ring-amber-500"
+                    />
+                    <span>Mostra in Vetrina</span>
+                  </label>
+                </div>
                 <div className="space-y-2">
                   <div>
                     <label className="text-[10px] font-bold text-slate-600 block mb-0.5">Feriali (Lunedì - Venerdì)</label>
