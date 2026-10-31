@@ -11,6 +11,11 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - **Personalizzazione Box Newsletter**: Diciture, badge e testi di invito al Club Privato/Newsletter ora completamente configurabili dall'esercente con preview in tempo reale.
 - **Dati Atelier e Posizione Dinamici**: Orari feriali, sabato e domenica, indirizzo bottega e pulsante indicazioni stradali interamente gestiti dal pannello di controllo.
 
+### 2. 🔐 Autenticazione Biometrica Rapida WebAuthn FIDO2 & Gestione Dispositivi
+- **Accesso Istantaneo con FaceID / Impronta / PIN**: Introdotto il supporto standard FIDO2 WebAuthn per lo sblocco immediato del gestionale senza dover digitare ogni volta password o PIN.
+- **Gestione Dispositivi Autorizzati**: Scheda dedicata nelle impostazioni dell'atelier per registrare e revocare smartphone, tablet e postazioni da remoto con visualizzazione di IP e data di ultimo utilizzo.
+- **Supporto Multi-Origin & Sicurezza Avanzata**: Piena compatibilità con domini personalizzati e certificati di sicurezza hardware integrati nel dispositivo.
+
 ---
 
 ## Novità della Versione 1.0.7 (Hotfix / Patch)
