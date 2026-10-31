@@ -38,6 +38,7 @@ import Footer from "@/components/Footer";
 import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
 import TelegramSettingsPanel, { TelegramSettingsData } from "@/components/dashboard/TelegramSettingsPanel";
 import FidelitySettingsPanel, { FidelitySettingsData } from "@/components/dashboard/FidelitySettingsPanel";
+import RegisteredDevicesCard from "@/components/dashboard/RegisteredDevicesCard";
 
 type SettingsTab = "bottega" | "camerino" | "dominio" | "email" | "telegram" | "fidelity" | "dispositivi" | "aspetto";
 type StudioSubTab = "hero" | "showgallery" | "catalogo" | "atelier";
@@ -1111,75 +1112,10 @@ export default function ShowlyImpostazioniPage() {
             </div>
           )}
 
-          {/* TAB 5: DISPOSITIVI PWA */}
+          {/* TAB 5: DISPOSITIVI PWA & WEBAUTHN BIOMETRIA */}
           {activeTab === "dispositivi" && (
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900">
-                    Dispositivi Autorizzati &amp; Sessioni PWA
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Elenco degli smartphone, tablet e computer che hanno effettuato l&apos;accesso al gestionale dell&apos;atelier.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={loadDevices}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer w-fit"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  <span>Aggiorna Lista</span>
-                </button>
-              </div>
-
-              {loadingDevices ? (
-                <div className="py-8 text-center text-xs text-slate-400">
-                  Lettura dispositivi registrati...
-                </div>
-              ) : devices.length === 0 ? (
-                <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 text-center space-y-1.5">
-                  <Smartphone className="w-7 h-7 text-slate-400 mx-auto" />
-                  <p className="text-xs font-bold text-slate-700">
-                    Nessun dispositivo memorizzato
-                  </p>
-                  <p className="text-[11px] text-slate-500">
-                    I dispositivi compariranno automaticamente qui al primo accesso autenticato.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-2.5">
-                  {devices.map((d) => (
-                    <div
-                      key={d.id}
-                      className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
-                          <Smartphone className="w-4 h-4" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-slate-900 truncate">
-                            {d.deviceName}
-                          </p>
-                          <p className="text-[11px] text-slate-500 truncate">
-                            IP: {d.ipAddress} • Ultimo uso:{" "}
-                            {new Date(d.lastUsedAt).toLocaleString("it-IT")}
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => handleRevokeDevice(d.id)}
-                        className="p-2 rounded-lg text-rose-600 hover:bg-rose-50 transition cursor-pointer"
-                        title="Scollega dispositivo"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div className="space-y-6">
+              <RegisteredDevicesCard />
             </div>
           )}
 

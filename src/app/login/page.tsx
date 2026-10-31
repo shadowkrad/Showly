@@ -16,7 +16,9 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
+  Fingerprint,
 } from "lucide-react";
+import { startAuthentication, browserSupportsWebAuthn } from "@simplewebauthn/browser";
 import { ShowlyModuleIcon } from "@/components/common/TaaaacLogo";
 
 export default function LoginPage() {
@@ -36,10 +38,14 @@ export default function LoginPage() {
   const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
+  const [biometricLoading, setBiometricLoading] = useState(false);
+  const [supportsWebAuthn, setSupportsWebAuthn] = useState(false);
   const [isDemo, setIsDemo] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
+    setSupportsWebAuthn(browserSupportsWebAuthn());
+
     if (typeof window !== "undefined") {
       const hn = window.location.hostname.toLowerCase();
       const isDemoDomain =
@@ -58,6 +64,48 @@ export default function LoginPage() {
       }
     }
   }, []);
+
+  const handleBiometricLogin = async () => {
+    setErrorMsg("");
+    setBiometricLoading(true);
+
+    try {
+      const optRes = await fetch("/api/auth/device/login-options", {
+        method: "POST",
+      });
+
+      if (!optRes.ok) {
+        const err = await optRes.json();
+        throw new Error(err.error || "Nessun dispositivo registrato su questo browser. Accedi prima con le tue credenziali.");
+      }
+
+      const options = await optRes.json();
+      const authResp = await startAuthentication(options);
+
+      const verifyRes = await fetch("/api/auth/device/login-verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ response: authResp, deviceId: options.deviceId }),
+      });
+
+      if (!verifyRes.ok) {
+        const err = await verifyRes.json();
+        throw new Error(err.error || "Verifica biometrica non riuscita.");
+      }
+
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err: any) {
+      console.error("Biometric login error:", err);
+      if (err.name === "NotAllowedError") {
+        setErrorMsg("Accesso biometrico annullato dall'utente.");
+      } else {
+        setErrorMsg(err.message || "Dispositivo non riconosciuto. Inserisci le tue credenziali.");
+      }
+    } finally {
+      setBiometricLoading(false);
+    }
+  };
 
   const handlePinDigit = (digit: string) => {
     if (pin.length < 6) {
@@ -83,7 +131,7 @@ export default function LoginPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Errore durante l'accesso demo");
 
-      router.push("/admin");
+      router.push("/dashboard");
     } catch (err: any) {
       setErrorMsg(err.message || "Errore accesso demo");
     } finally {
@@ -130,7 +178,7 @@ export default function LoginPage() {
         throw new Error(data.error || "Credenziali non valide");
       }
 
-      router.push("/admin");
+      router.push("/dashboard");
     } catch (err: any) {
       setErrorMsg(err.message || "Si è verificato un errore durante l'accesso.");
       if (loginMode === "pin") setPin("");
@@ -187,6 +235,32 @@ export default function LoginPage() {
                 {demoLoading ? "Accesso in corso..." : "Entra come Titolare Demo (1-Click)"}
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
+            </div>
+          )}
+
+          {/* Sblocco Rapido Biometrico (WebAuthn FIDO2) */}
+          {supportsWebAuthn && (
+            <div className="mb-6 space-y-2">
+              <button
+                type="button"
+                onClick={handleBiometricLogin}
+                disabled={biometricLoading || loading}
+                className="w-full flex items-center justify-center gap-2.5 bg-slate-800 hover:bg-slate-750 active:scale-98 text-white font-bold py-3 px-4 rounded-2xl text-xs sm:text-sm transition shadow-sm cursor-pointer disabled:opacity-60 border border-slate-700/80"
+              >
+                <Fingerprint
+                  className={`w-4 h-4 text-purple-400 ${
+                    biometricLoading ? "animate-spin" : ""
+                  }`}
+                />
+                <span>
+                  {biometricLoading
+                    ? "Verifica biometrica in corso..."
+                    : "Sblocco con FaceID / Impronta"}
+                </span>
+              </button>
+              <p className="text-[11px] text-slate-400 text-center font-medium">
+                Dispositivo autorizzato • Face ID • Touch ID
+              </p>
             </div>
           )}
 
