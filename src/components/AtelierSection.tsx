@@ -79,16 +79,18 @@ export default function AtelierSection({
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span>{config.atelier.addressText}</span>
               </div>
-              <div className="flex items-start space-x-3 text-xs text-luxe-sub border-t border-white/5 pt-3">
-                <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <div className="space-y-1">
-                  <div>{config.atelier.hoursWeekdayText}</div>
-                  <div>{config.atelier.hoursSaturdayText}</div>
-                  <div className="text-rose-400/80">
-                    {config.atelier.hoursSundayText}
+              {config.atelier.showHours !== false && (
+                <div className="flex items-start space-x-3 text-xs text-luxe-sub border-t border-white/5 pt-3">
+                  <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <div>{config.atelier.hoursWeekdayText}</div>
+                    <div>{config.atelier.hoursSaturdayText}</div>
+                    <div className="text-rose-400/80">
+                      {config.atelier.hoursSundayText}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Pulsante Indicazioni Stradali Google Maps (WhatsApp è nel pallino flottante standard in basso a destra) */}
