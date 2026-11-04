@@ -36,7 +36,7 @@ import CatalogGrid from "@/components/CatalogGrid";
 import AtelierSection from "@/components/AtelierSection";
 import Footer from "@/components/Footer";
 import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
-import TelegramSettingsPanel, { TelegramSettingsData } from "@/components/dashboard/TelegramSettingsPanel";
+import TelegramHubCard, { TelegramHubData } from "@/components/dashboard/TelegramHubCard";
 import FidelitySettingsPanel, { FidelitySettingsData } from "@/components/dashboard/FidelitySettingsPanel";
 import RegisteredDevicesCard from "@/components/dashboard/RegisteredDevicesCard";
 
@@ -129,12 +129,13 @@ export default function ShowlyImpostazioniPage() {
   const [lastSyncAt, setLastSyncAt] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
   // Telegram & Fidelity State
-  const [telegramSettings, setTelegramSettings] = useState<TelegramSettingsData>({
-    enabled: false,
-    botToken: "",
-    botUsername: "",
-    staffChatId: "",
-  });
+  const [telegramHub, setTelegramHub] = useState<TelegramHubData | null>(null);
+  useEffect(() => {
+    fetch("/api/telegram-hub")
+      .then((r) => r.json())
+      .then((d) => setTelegramHub(d))
+      .catch(() => {});
+  }, []);
 
   const [fidelitySettings, setFidelitySettings] = useState<FidelitySettingsData>({
     enabled: false,
@@ -166,7 +167,6 @@ export default function ShowlyImpostazioniPage() {
         if (data && data.brand) {
           setConfig(data);
         }
-        if (data?.telegramSettings) setTelegramSettings(data.telegramSettings);
         if (data?.fidelitySettings) setFidelitySettings(data.fidelitySettings);
       })
       .catch(() => {});
@@ -251,7 +251,7 @@ export default function ShowlyImpostazioniPage() {
       const res = await fetch("/api/config", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...config, telegramSettings, fidelitySettings }),
+        body: JSON.stringify({ ...config, fidelitySettings }),
       });
       if (res.ok) {
         setFeedback({
@@ -1115,20 +1115,7 @@ export default function ShowlyImpostazioniPage() {
           {/* TAB: TELEGRAM HUB & STAFF */}
           {activeTab === "telegram" && (
             <div className="space-y-6">
-              <TelegramSettingsPanel
-                data={telegramSettings}
-                onChange={(updated) => {
-                  const toggled = updated.enabled !== telegramSettings.enabled;
-                  setTelegramSettings(updated);
-                  if (toggled) {
-                    fetch("/api/config", {
-                      method: "PUT",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ ...config, telegramSettings: updated, fidelitySettings }),
-                    }).catch(() => {});
-                  }
-                }}
-              />
+              <TelegramHubCard hub={telegramHub} />
             </div>
           )}
 
@@ -1146,7 +1133,7 @@ export default function ShowlyImpostazioniPage() {
                     fetch("/api/config", {
                       method: "PUT",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ ...config, telegramSettings, fidelitySettings: updated }),
+                      body: JSON.stringify({ ...config, fidelitySettings: updated }),
                     }).catch(() => {});
                   }
                 }}
