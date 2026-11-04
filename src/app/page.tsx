@@ -99,10 +99,12 @@ export default function HomePage() {
       <Footer config={config} />
 
       {/* Pallino Flottante Standard WhatsApp Taaaac */}
-      <FloatingWhatsAppWidget
-        phone={config.atelier.whatsappButtonText}
-        brandName={config.brand.name}
-      />
+      {(config as any).whatsappEnabled !== false && (
+        <FloatingWhatsAppWidget
+          phone={config.atelier.whatsappButtonText || config.business?.telefono}
+          brandName={config.brand.name}
+        />
+      )}
 
       {/* Modale "Metti da Parte" (Click & Reserve 24h) */}
       <ReserveModal
