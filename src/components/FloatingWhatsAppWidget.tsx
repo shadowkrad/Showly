@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 
 interface FloatingWhatsAppWidgetProps {
   phone?: string | null;
@@ -18,15 +19,31 @@ export default function FloatingWhatsAppWidget({
   className = "",
 }: FloatingWhatsAppWidgetProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const pathname = usePathname();
+
+  if (
+    !inSimulator &&
+    (pathname?.startsWith("/dashboard") ||
+      pathname?.startsWith("/admin") ||
+      pathname?.startsWith("/login") ||
+      pathname?.startsWith("/maintenance-login"))
+  ) {
+    return null;
+  }
 
   const rawPhone = phone || "+39 340 0000000";
-  const cleanPhone = rawPhone.replace(/[^0-9]/g, "") || "393400000000";
+  let cleanPhone = rawPhone.replace(/[^0-9]/g, "") || "393400000000";
+  if (cleanPhone.length === 10 && cleanPhone.startsWith("3")) {
+    cleanPhone = `39${cleanPhone}`;
+  } else if (cleanPhone.startsWith("0") && !cleanPhone.startsWith("00")) {
+    cleanPhone = `39${cleanPhone}`;
+  }
 
   const message =
     defaultMessage ||
     `Ciao! Vorrei informazioni sulle creazioni in vetrina e sulla prova in bottega da ${brandName}. 💎✨`;
 
-  const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+  const waUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(message)}`;
 
   if (inSimulator) {
     return (
