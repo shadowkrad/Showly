@@ -1076,6 +1076,48 @@ export default function ShowlyImpostazioniPage() {
             </div>
           )}
 
+          {/* TAB: TELEGRAM HUB & STAFF */}
+          {activeTab === "telegram" && (
+            <div className="space-y-6">
+              <TelegramSettingsPanel
+                data={telegramSettings}
+                onChange={(updated) => {
+                  const toggled = updated.enabled !== telegramSettings.enabled;
+                  setTelegramSettings(updated);
+                  if (toggled) {
+                    fetch("/api/config", {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ ...config, telegramSettings: updated, fidelitySettings }),
+                    }).catch(() => {});
+                  }
+                }}
+              />
+            </div>
+          )}
+
+          {/* TAB: FIDELITY & CLUB */}
+          {activeTab === "fidelity" && (
+            <div className="space-y-6">
+              <FidelitySettingsPanel
+                data={fidelitySettings}
+                onChange={(updated) => {
+                  const toggled =
+                    updated.enabled !== fidelitySettings.enabled ||
+                    (updated.rewards?.length || 0) !== (fidelitySettings.rewards?.length || 0);
+                  setFidelitySettings(updated);
+                  if (toggled) {
+                    fetch("/api/config", {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ ...config, telegramSettings, fidelitySettings: updated }),
+                    }).catch(() => {});
+                  }
+                }}
+              />
+            </div>
+          )}
+
           {/* TAB 5: DISPOSITIVI PWA & WEBAUTHN BIOMETRIA */}
           {activeTab === "dispositivi" && (
             <div className="space-y-6">
