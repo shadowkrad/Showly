@@ -26,7 +26,7 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - **Centralizzazione Sicurezza e MFA su Taaaac Core**: Le impostazioni avanzate di sicurezza (2FA TOTP, codici di recupero, cambio password) sono centralizzate al 100% nella dashboard utente di Taaaac (taaaac.eu/portal), semplificando l'esperienza all'interno del modulo satellite.
 
 ---
-## Novità della Versione 1.1.0 (In Sviluppo)
+## Novità della Versione 1.1.0
 *Release Ufficiale di Nascita di Showly nella Suite Taaaac*
 
 ### 1. Vetrina Dinamica d'Autore & ShowGallery Stile Apple
