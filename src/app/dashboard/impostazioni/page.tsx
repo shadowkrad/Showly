@@ -834,7 +834,7 @@ export default function ShowlyImpostazioniPage() {
                         pricing: { ...config.pricing, showPricesGlobally: e.target.checked },
                       })
                     }
-                    className="w-5 h-5 accent-amber-500 rounded cursor-pointer"
+                    className="shrink-0 w-5 h-5 accent-amber-500 rounded cursor-pointer"
                   />
                 </div>
 
@@ -856,7 +856,7 @@ export default function ShowlyImpostazioniPage() {
                         business: { ...business, ritiroInBottega24h: e.target.checked },
                       })
                     }
-                    className="w-5 h-5 accent-amber-500 rounded cursor-pointer"
+                    className="shrink-0 w-5 h-5 accent-amber-500 rounded cursor-pointer"
                   />
                 </div>
 
@@ -878,7 +878,7 @@ export default function ShowlyImpostazioniPage() {
                         business: { ...business, notificaNuovePrenotazioni: e.target.checked },
                       })
                     }
-                    className="w-5 h-5 accent-amber-500 rounded cursor-pointer"
+                    className="shrink-0 w-5 h-5 accent-amber-500 rounded cursor-pointer"
                   />
                 </div>
               </div>
