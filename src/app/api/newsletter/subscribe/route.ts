@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cercaClientePerTelefono } from "@/lib/clienti-telefono";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -47,9 +48,9 @@ export async function POST(req: NextRequest) {
       });
     }
     if (!existing && trimmedTelefono) {
-      existing = await prisma.clienteNewsletter.findFirst({
-        where: { telefono: trimmedTelefono },
-      });
+      // Un numero, un cliente (riconosce anche +39, spazi, ecc.)
+      const trovato = await cercaClientePerTelefono(trimmedTelefono);
+      if (trovato) existing = await prisma.clienteNewsletter.findUnique({ where: { id: trovato.id } });
     }
 
     if (existing) {

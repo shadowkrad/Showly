@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cercaClientePerTelefono } from "@/lib/clienti-telefono";
+import { normalizePhone, parseDataNascita } from "@/lib/phone";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -93,7 +95,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { nome, email, telefono, sponsor, campagna, codiceReferral, stato, note } =
+    const { nome, email, telefono, sponsor, campagna, codiceReferral, stato, note, dataNascita } =
       body;
 
     const trimmedEmail = email?.trim().toLowerCase() || null;
@@ -106,11 +108,27 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Un numero, un cliente: se il telefono esiste gia' si rimanda alla scheda esistente
+    if (trimmedTelefono) {
+      const esistente = await cercaClientePerTelefono(trimmedTelefono);
+      if (esistente) {
+        return NextResponse.json(
+          { error: `Questo numero è già registrato per ${esistente.nome || "un altro contatto"}`, clienteEsistenteId: esistente.id },
+          { status: 409 }
+        );
+      }
+    }
+    const nascita = dataNascita ? parseDataNascita(String(dataNascita)) : null;
+    if (dataNascita && !nascita) {
+      return NextResponse.json({ error: "Data di nascita non valida" }, { status: 400 });
+    }
+
     const cliente = await prisma.clienteNewsletter.create({
       data: {
         nome: nome?.trim() || null,
         email: trimmedEmail,
-        telefono: trimmedTelefono,
+        telefono: trimmedTelefono ? normalizePhone(trimmedTelefono) || trimmedTelefono : null,
+        dataNascita: nascita,
         sponsor: sponsor?.trim() || "Diretto",
         campagna: campagna?.trim() || null,
         codiceReferral: codiceReferral?.trim() || null,
@@ -135,10 +153,37 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
-    const { id, nome, email, telefono, sponsor, campagna, stato, note } = body;
+    const { id, nome, email, telefono, sponsor, campagna, stato, note, dataNascita } = body;
 
     if (!id) {
       return NextResponse.json({ error: "ID cliente mancante." }, { status: 400 });
+    }
+
+    // Telefono: salvato normalizzato e mai uguale a quello di un altro contatto
+    let telefonoDaSalvare: string | null | undefined;
+    if (telefono !== undefined) {
+      const t = telefono?.trim() || "";
+      if (t) {
+        const altro = await cercaClientePerTelefono(t, id);
+        if (altro) {
+          return NextResponse.json(
+            { error: `Questo numero è già registrato per ${altro.nome || "un altro contatto"}`, clienteEsistenteId: altro.id },
+            { status: 409 }
+          );
+        }
+        telefonoDaSalvare = normalizePhone(t) || t;
+      } else {
+        telefonoDaSalvare = null;
+      }
+    }
+    let nascita: Date | null | undefined;
+    if (dataNascita !== undefined) {
+      if (dataNascita) {
+        nascita = parseDataNascita(String(dataNascita));
+        if (!nascita) return NextResponse.json({ error: "Data di nascita non valida" }, { status: 400 });
+      } else {
+        nascita = null;
+      }
     }
 
     const aggiornato = await prisma.clienteNewsletter.update({
@@ -148,7 +193,8 @@ export async function PATCH(req: NextRequest) {
         ...(email !== undefined && {
           email: email?.trim().toLowerCase() || null,
         }),
-        ...(telefono !== undefined && { telefono: telefono?.trim() || null }),
+        ...(telefonoDaSalvare !== undefined && { telefono: telefonoDaSalvare }),
+        ...(nascita !== undefined && { dataNascita: nascita }),
         ...(sponsor !== undefined && { sponsor: sponsor?.trim() || "Diretto" }),
         ...(campagna !== undefined && { campagna: campagna?.trim() || null }),
         ...(stato !== undefined && { stato }),
