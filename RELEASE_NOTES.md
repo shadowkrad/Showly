@@ -4,6 +4,36 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 
 ---
 
+## Novità della Versione 1.1.2 (Patch)
+
+### 1. 👤 Clienti e Iscritti Uniti
+- **Un numero, un cliente**: gli iscritti alla newsletter sono la base clienti dell'atelier. Lo stesso telefono (anche scritto con spazi, trattini o +39) è sempre lo stesso contatto: il gestionale lo segnala e, dalla newsletter pubblica, riconosce chi è già iscritto.
+- **Data di nascita** facoltativa nella scheda del contatto, base per il buono compleanno.
+
+### 2. 🎟️ Fedeltà a Punti Vera
+- **Cassa fedeltà** per gli acquisti in atelier: si cerca il cliente per telefono, nome, email o link della tessera, si accreditano i punti sulla spesa e si riscattano i premi. (Showly non gestisce gli incassi: i punti si assegnano da qui.)
+- **Impostazioni salvate davvero**: prima le regole della fedeltà non venivano memorizzate; ora regole e premi si salvano e si rileggono.
+- **Tessera digitale** con colore e nome dell'atelier (link privato con QR), aggiungibile alla schermata Home del telefono. Le pagine Fedeltà e Buoni non sono più schermate di esempio.
+
+### 3. 🎁 Buoni Completi, Invio e Stampa
+- **Un buono per ogni motivo**: regalo, sconto, compensazione, gesto commerciale, premio punti, compleanno, promozione; valore in euro, percentuale o servizio in omaggio; scadenza facoltativa, spesa minima, uso in più volte o unico.
+- **Cassa con anteprima**, annullo con motivo e movimenti registrati. **Email** (di default, dal servizio Taaaac), **WhatsApp a scelta dell'esercente** (mai in automatico, mai verso i fissi), pagina del buono con QR, **stampa A4 o ricevuta da 80 mm** e ristampa con lo stesso codice.
+
+### 4. 🎂 Compleanno e Premi che Diventano Buoni
+- **Buono compleanno automatico**, una volta per cliente e per anno, con email solo a chi è iscritto e non disiscritto. Parte quando si apre la pagina Buoni o da `/api/cron/compleanni`.
+- **Premio punti → buono**: riscattando un premio si scalano i punti e nasce un buono intestato al cliente, nella stessa operazione.
+
+---
+
+## Novità della Versione 1.1.1 (Patch)
+
+### 1. ✈️ Telegram Gestito da Taaaac Core (Hub Centralizzato)
+- **Un solo posto per configurare Telegram**: il pannello Telegram locale è sostituito da una scheda di sola lettura (stato, bot, avvisi attivi) con il link al portale Taaaac, da cui si attiva o disattiva il canale.
+- **Nessun token nel modulo**: token del bot e chat ID non vengono più inseriti né salvati nelle impostazioni del modulo, e il test non passa più dal browser.
+- **Stato letto dal Core**: la scheda legge `telegram*` da `/api/public/tenant-config` (mai token né chat ID).
+
+---
+
 ## Novità della Versione 1.0.8 (Hotfix / Patch)
 
 ### 1. 🎨 Live Studio Completo & Vetrina 100% Personalizzabile
@@ -26,7 +56,7 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - **Centralizzazione Sicurezza e MFA su Taaaac Core**: Le impostazioni avanzate di sicurezza (2FA TOTP, codici di recupero, cambio password) sono centralizzate al 100% nella dashboard utente di Taaaac (taaaac.eu/portal), semplificando l'esperienza all'interno del modulo satellite.
 
 ---
-## Novità della Versione 1.1.0 (In Sviluppo)
+## Novità della Versione 1.1.0
 *Release Ufficiale di Nascita di Showly nella Suite Taaaac*
 
 ### 1. Vetrina Dinamica d'Autore & ShowGallery Stile Apple

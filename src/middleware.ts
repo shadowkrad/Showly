@@ -12,7 +12,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const response = NextResponse.next();
+  // Il layout generale deve sapere se e' la tessera del cliente (ha icona e manifest propri)
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
 
   // Security Headers & supporto iframe per la vetrina interattiva su taaaac.eu/demo
   response.headers.set("X-Content-Type-Options", "nosniff");

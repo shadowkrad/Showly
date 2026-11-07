@@ -1,4 +1,5 @@
 import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
+import { headers } from "next/headers";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
@@ -27,17 +28,24 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // La tessera del cliente ha icona (logo) e manifest propri, impostati dalla sua pagina
+  const eTessera = ((await headers()).get("x-pathname") || "").startsWith("/tessera/");
+
   return (
     <html lang="it">
       <head>
-        <link rel="icon" href="/api/pwa-icon?size=192" sizes="any" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/api/pwa-icon?size=180" />
-        <link rel="manifest" href="/manifest.webmanifest" />
+        {!eTessera && (
+          <>
+            <link rel="icon" href="/api/pwa-icon?size=192" sizes="any" />
+            <link rel="apple-touch-icon" sizes="180x180" href="/api/pwa-icon?size=180" />
+            <link rel="manifest" href="/manifest.webmanifest" />
+          </>
+        )}
       </head>
       <body className="bg-luxe-black text-luxe-light selection:bg-amber-400 selection:text-black antialiased min-h-screen flex flex-col overflow-x-hidden">
         {children}

@@ -94,9 +94,28 @@ export async function GET() {
         // fallback
       }
     }
+    let fidelityRules: any = null;
+    try {
+      fidelityRules = impostazioni?.fidelityRules ? JSON.parse(impostazioni.fidelityRules) : null;
+    } catch {
+      fidelityRules = null;
+    }
     return NextResponse.json({
       ...DEFAULT_SHOWLY_CONFIG,
       whatsappEnabled,
+      fidelitySettings: {
+        enabled: Boolean(impostazioni?.fidelityEnabled),
+        pointsPerEuro: fidelityRules?.pointsPerEuro || 1,
+        welcomeBonusPoints: fidelityRules?.welcomeBonusPoints ?? 15,
+        minPointsToRedeem: fidelityRules?.minPointsToRedeem || 60,
+        rewardVoucherMonths: fidelityRules?.rewardVoucherMonths ?? 6,
+        compleanno: fidelityRules?.compleanno,
+        rewards: fidelityRules?.rewards || [
+          { id: "rew_s1", name: "Pulizia e lucidatura gioielli omaggio", pointsRequired: 60, rewardType: "FREE_ITEM", freeItemName: "Pulizia e lucidatura di un gioiello" },
+          { id: "rew_s2", name: "Sconto 20€ sul prossimo acquisto", pointsRequired: 120, rewardType: "DISCOUNT", discountAmount: 20 },
+          { id: "rew_s3", name: "Pezzo in omaggio fino a 50€", pointsRequired: 250, rewardType: "FREE_ITEM", freeItemName: "Gioiello a scelta fino a 50€" },
+        ],
+      },
       atelier: {
         ...DEFAULT_SHOWLY_CONFIG.atelier,
         whatsappButtonText:
@@ -120,7 +139,11 @@ export async function PUT(req: NextRequest) {
   }
 
   try {
-    const body = await req.json();
+    const { fidelitySettings, ...body } = await req.json();
+    const fidelityData: Record<string, unknown> =
+      fidelitySettings !== undefined
+        ? { fidelityEnabled: Boolean(fidelitySettings?.enabled), fidelityRules: JSON.stringify(fidelitySettings) }
+        : {};
     await prisma.impostazioni.upsert({
       where: { id: "singleton" },
       update: {
@@ -129,6 +152,7 @@ export async function PUT(req: NextRequest) {
         indirizzo: body.atelier?.addressText || "Via del Corso 24, Arezzo",
         showcaseConfig: JSON.stringify(body),
         mostraPrezzi: body.pricing?.showPricesGlobally ?? true,
+        ...fidelityData,
       },
       create: {
         id: "singleton",
@@ -137,6 +161,7 @@ export async function PUT(req: NextRequest) {
         indirizzo: body.atelier?.addressText || "Via del Corso 24, Arezzo",
         showcaseConfig: JSON.stringify(body),
         mostraPrezzi: body.pricing?.showPricesGlobally ?? true,
+        ...fidelityData,
       },
     });
 
