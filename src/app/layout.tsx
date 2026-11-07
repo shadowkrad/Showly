@@ -1,4 +1,3 @@
-import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
 import { headers } from "next/headers";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
@@ -49,7 +48,6 @@ export default async function RootLayout({
       </head>
       <body className="bg-luxe-black text-luxe-light selection:bg-amber-400 selection:text-black antialiased min-h-screen flex flex-col overflow-x-hidden">
         {children}
-      <FloatingWhatsAppWidget />
       </body>
     </html>
   );
