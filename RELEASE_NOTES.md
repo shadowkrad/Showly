@@ -6,6 +6,7 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 
 ## Novità della Versione 1.1.2 (Patch)
 
+- Il pallino WhatsApp compare solo nella vetrina pubblica del sito: non piu' nelle pagine interne, nelle tessere e nei buoni dei clienti (prima bastava una pagina non prevista per vederlo).
 ### 1. 👤 Clienti e Iscritti Uniti
 - **Un numero, un cliente**: gli iscritti alla newsletter sono la base clienti dell'atelier. Lo stesso telefono (anche scritto con spazi, trattini o +39) è sempre lo stesso contatto: il gestionale lo segnala e, dalla newsletter pubblica, riconosce chi è già iscritto.
 - **Data di nascita** facoltativa nella scheda del contatto, base per il buono compleanno.

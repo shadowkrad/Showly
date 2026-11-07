@@ -23,10 +23,7 @@ export default function FloatingWhatsAppWidget({
 
   if (
     !inSimulator &&
-    (pathname?.startsWith("/dashboard") ||
-      pathname?.startsWith("/admin") ||
-      pathname?.startsWith("/login") ||
-      pathname?.startsWith("/maintenance-login"))
+    pathname !== "/"
   ) {
     return null;
   }
