@@ -32,9 +32,9 @@ export async function caricaCartaGrafica(origineUrl?: string): Promise<{
     sottotitoloBrand: "ATELIER & SHOWROOM",
   });
 
-  const feriali = (rawJson?.atelier?.hoursWeekdayText || "09:30 - 13:00 / 15:30 - 19:30").replace(/^.*?:s*/, "").trim();
-  const sabato = (rawJson?.atelier?.hoursSaturdayText || "09:30 - 19:30").replace(/^.*?:s*/, "").trim();
-  const domenica = (rawJson?.atelier?.hoursSundayText || "CHIUSO").replace(/^.*?:s*/, "").trim();
+  const feriali = (rawJson?.atelier?.hoursWeekdayText || "09:30 - 13:00 / 15:30 - 19:30").replace(/^[A-Za-zÀ-ÿ\s–-]+:\s*/, "").trim();
+  const sabato = (rawJson?.atelier?.hoursSaturdayText || "09:30 - 19:30").replace(/^[A-Za-zÀ-ÿ\s–-]+:\s*/, "").trim();
+  const domenica = (rawJson?.atelier?.hoursSundayText || "CHIUSO").replace(/^[A-Za-zÀ-ÿ\s–-]+:\s*/, "").trim();
 
   const orariGiornalieri: OrarioGiornoCarta[] = [
     { giorno: "LUNEDÌ", orario: feriali, chiuso: /chiuso/i.test(feriali) },
