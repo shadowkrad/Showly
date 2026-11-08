@@ -7,11 +7,14 @@ import {
   DatiAttivitaCarta,
   OrarioGiornoCarta,
   normalizzaCartaGraficaConfig,
+  applicaPersonalizzati,
 } from "@/lib/carta-grafica-types";
 
 export async function caricaCartaGrafica(origineUrl?: string): Promise<{
   config: CartaGraficaConfig;
   attivita: DatiAttivitaCarta;
+  /** Dati di Impostazioni, senza le voci cambiate solo per biglietti e buoni (serve all'editor). */
+  ereditata: DatiAttivitaCarta;
 }> {
   await ensureDatabase();
   const [brand, salvata] = await Promise.all([
@@ -58,7 +61,7 @@ export async function caricaCartaGrafica(origineUrl?: string): Promise<{
     qrVetrinaDataUrl = await QRCode.toDataURL(sitoUrl, { margin: 1, width: 280, errorCorrectionLevel: "M" });
   } catch {}
 
-  const attivita: DatiAttivitaCarta = {
+  const ereditata: DatiAttivitaCarta = {
     nome,
     slogan: (rawJson?.brand?.subtitle || "").trim(),
     indirizzo: (brand.indirizzo || rawJson?.atelier?.addressText || "").trim(),
@@ -75,7 +78,7 @@ export async function caricaCartaGrafica(origineUrl?: string): Promise<{
     orariRaggruppati,
   };
 
-  return { config, attivita };
+  return { config, attivita: applicaPersonalizzati(ereditata, config.personalizzati), ereditata };
 }
 
 export async function salvaCartaGrafica(nuovaConfig: unknown): Promise<CartaGraficaConfig> {
