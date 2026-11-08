@@ -28,6 +28,7 @@ import {
   Laptop,
   RotateCcw,
   Award,
+  CreditCard,
 } from "lucide-react";
 import { DEFAULT_SHOWLY_CONFIG, ShowlyConfig } from "@/lib/config";
 import Header from "@/components/Header";
@@ -39,8 +40,9 @@ import FloatingWhatsAppWidget from "@/components/FloatingWhatsAppWidget";
 import TelegramHubCard, { TelegramHubData } from "@/components/dashboard/TelegramHubCard";
 import FidelitySettingsPanel, { FidelitySettingsData } from "@/components/dashboard/FidelitySettingsPanel";
 import RegisteredDevicesCard from "@/components/dashboard/RegisteredDevicesCard";
+import EditorCartaGrafica from "@/components/carta-grafica/EditorCartaGrafica";
 
-type SettingsTab = "bottega" | "camerino" | "dominio" | "email" | "telegram" | "fidelity" | "dispositivi" | "aspetto";
+type SettingsTab = "bottega" | "camerino" | "dominio" | "email" | "telegram" | "fidelity" | "dispositivi" | "aspetto" | "carta-grafica";
 type StudioSubTab = "hero" | "showgallery" | "catalogo" | "atelier";
 
 interface TabItem {
@@ -116,6 +118,14 @@ const TABS: TabItem[] = [
     iconComponent: Palette,
     shortDescription: "Logo, foto e Live Studio",
     description: "Personalizzazione vetrina still-life, ShowGallery, catalogo creazioni e simulatore live",
+  },
+  {
+    id: "carta-grafica",
+    label: "Biglietti & Buoni",
+    shortLabel: "Biglietti",
+    iconComponent: CreditCard,
+    shortDescription: "Grafica buoni e biglietto da visita",
+    description: "Editor visivo per buoni regalo e biglietti da visita fronte/retro con sfondo personalizzato",
   },
 ];
 
@@ -1770,6 +1780,11 @@ export default function ShowlyImpostazioniPage() {
               </div>
             </div>
           )}
+      {activeTab === "carta-grafica" && (
+        <div className="space-y-6">
+          <EditorCartaGrafica />
+        </div>
+      )}
         </main>
       </div>
     </div>
