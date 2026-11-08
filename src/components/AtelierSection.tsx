@@ -75,12 +75,14 @@ export default function AtelierSection({
 
             {/* Scheda Orari e Indirizzo */}
             <div className="bg-luxe-card border border-white/10 rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 space-y-3.5">
-              <div className="flex items-start space-x-3 text-xs text-luxe-light">
-                <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <span>{config.atelier.addressText}</span>
-              </div>
+              {config.atelier.showAddress !== false && (
+                <div className="flex items-start space-x-3 text-xs text-luxe-light">
+                  <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <span>{config.atelier.addressText}</span>
+                </div>
+              )}
               {config.atelier.showHours !== false && (
-                <div className="flex items-start space-x-3 text-xs text-luxe-sub border-t border-white/5 pt-3">
+                <div className={`flex items-start space-x-3 text-xs text-luxe-sub ${config.atelier.showAddress !== false ? "border-t border-white/5 pt-3" : ""}`}>
                   <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                   <div className="space-y-1">
                     <div>{config.atelier.hoursWeekdayText}</div>

@@ -36,13 +36,6 @@ interface FestivitaNazionale {
 export default function ShowlyOrariPage() {
   const [activeTab, setActiveTab] = useState<"standard" | "festivita">("standard");
 
-  // Orari Atelier Standard (Feriali, Sabato, Domenica)
-  const [orariFeriali, setOrariFeriali] = useState("09:30 – 13:00 / 15:30 – 19:30");
-  const [orariSabato, setOrariSabato] = useState("10:00 – 19:30 (Continuato)");
-  const [orariDomenica, setOrariDomenica] = useState("Chiuso (Aperto su Appuntamento)");
-  const [savingStandard, setSavingStandard] = useState(false);
-  const [standardFeedback, setStandardFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
-
   // Festività & Eccezioni
   const [eccezioni, setEccezioni] = useState<EccezioneCalendario[]>([]);
   const [festivitaNazionali, setFestivitaNazionali] = useState<FestivitaNazionale[]>([]);
@@ -102,27 +95,6 @@ export default function ShowlyOrariPage() {
       console.error(err);
     } finally {
       setSavingFestivita(false);
-    }
-  };
-
-  const handleSaveStandard = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSavingStandard(true);
-    setStandardFeedback(null);
-    try {
-      setTimeout(() => {
-        setStandardFeedback({
-          type: "success",
-          text: "Orari showroom e bottega salvati con successo!",
-        });
-        setSavingStandard(false);
-      }, 350);
-    } catch {
-      setStandardFeedback({
-        type: "error",
-        text: "Errore durante il salvataggio degli orari.",
-      });
-      setSavingStandard(false);
     }
   };
 
@@ -257,87 +229,24 @@ export default function ShowlyOrariPage() {
         </div>
       </div>
 
-      {/* TAB 1: Orari Standard Atelier */}
+      {/* TAB 1: Orari Standard Atelier (si modificano nelle Impostazioni) */}
       {activeTab === "standard" && (
-        <form onSubmit={handleSaveStandard} className="space-y-6">
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-xs">
-            <div className="flex items-center gap-2">
-              <Gem className="w-5 h-5 text-amber-600" />
-              <div>
-                <h2 className="text-base font-extrabold text-slate-900">Orari Visita Showroom & Bottega</h2>
-                <p className="text-xs text-slate-500">
-                  Mostrati nel footer, nella vetrina interattiva e al momento della prenotazione camerino.
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700">Lunedì – Venerdì (Feriali)</label>
-                <input
-                  type="text"
-                  value={orariFeriali}
-                  onChange={(e) => setOrariFeriali(e.target.value)}
-                  placeholder="09:30 – 13:00 / 15:30 – 19:30"
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
-                />
-                <p className="text-[11px] text-slate-400">Es. 09:30 – 13:00 / 15:30 – 19:30</p>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700">Sabato</label>
-                <input
-                  type="text"
-                  value={orariSabato}
-                  onChange={(e) => setOrariSabato(e.target.value)}
-                  placeholder="10:00 – 19:30 (Continuato)"
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
-                />
-                <p className="text-[11px] text-slate-400">Es. Orario continuato</p>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700">Domenica</label>
-                <input
-                  type="text"
-                  value={orariDomenica}
-                  onChange={(e) => setOrariDomenica(e.target.value)}
-                  placeholder="Chiuso (Aperto su Appuntamento)"
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
-                />
-                <p className="text-[11px] text-slate-400">Es. Chiuso oppure su appuntamento privato</p>
-              </div>
-            </div>
-
-            {standardFeedback && (
-              <div
-                className={`p-3 rounded-xl text-xs font-bold flex items-center gap-2 ${
-                  standardFeedback.type === "success"
-                    ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                    : "bg-rose-50 text-rose-800 border border-rose-200"
-                }`}
-              >
-                {standardFeedback.type === "success" ? (
-                  <Check className="w-4 h-4 text-emerald-600" />
-                ) : (
-                  <AlertCircle className="w-4 h-4 text-rose-600" />
-                )}
-                <span>{standardFeedback.text}</span>
-              </div>
-            )}
-
-            <div className="flex justify-end pt-2">
-              <button
-                type="submit"
-                disabled={savingStandard}
-                className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-amber-300 rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition active:scale-95"
-              >
-                <Save className="w-4 h-4" />
-                <span>{savingStandard ? "Salvataggio..." : "Salva Orari Atelier"}</span>
-              </button>
-            </div>
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-3 shadow-xs">
+          <div className="flex items-center gap-2">
+            <Gem className="w-5 h-5 text-amber-600" />
+            <h2 className="text-base font-extrabold text-slate-900">Orari di apertura della bottega</h2>
           </div>
-        </form>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Gli orari ufficiali si impostano in <strong>Impostazioni &gt; Attività</strong>: da lì vengono letti dalla vetrina e inviati a
+            Google, Facebook e Instagram, così sono identici ovunque. Qui gestisci le ferie e le date speciali.
+          </p>
+          <a
+            href="/dashboard/impostazioni"
+            className="inline-flex px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold"
+          >
+            Vai alle Impostazioni
+          </a>
+        </div>
       )}
 
       {/* TAB 2: Festività & Date Speciali */}

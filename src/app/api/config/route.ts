@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { DEFAULT_SHOWLY_CONFIG, ShowlyConfig } from "@/lib/config";
 import { isAdminAuthenticated } from "@/lib/auth";
+import { leggiConfigSalvata, proteggiDatiAttivita } from "@/lib/anagrafica-attivita";
 
 export async function GET() {
   let whatsappEnabled = true;
@@ -139,7 +140,11 @@ export async function PUT(req: NextRequest) {
   }
 
   try {
-    const { fidelitySettings, ...body } = await req.json();
+    const { fidelitySettings, ...rawBody } = await req.json();
+    // Lo Studio (?da=studio) NON puo' cambiare i dati dell'attivita': restano quelli delle Impostazioni
+    const body = new URL(req.url).searchParams.get("da") === "studio"
+      ? proteggiDatiAttivita(rawBody, await leggiConfigSalvata())
+      : rawBody;
     const fidelityData: Record<string, unknown> =
       fidelitySettings !== undefined
         ? { fidelityEnabled: Boolean(fidelitySettings?.enabled), fidelityRules: JSON.stringify(fidelitySettings) }

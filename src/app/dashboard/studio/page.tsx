@@ -93,7 +93,7 @@ export default function LiveShowcaseStudioPage() {
     setSaving(true);
     setSaveSuccess(false);
     try {
-      const res = await fetch("/api/config", {
+      const res = await fetch("/api/config?da=studio", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(config),
@@ -570,7 +570,8 @@ export default function LiveShowcaseStudioPage() {
                   <span>La Bottega &amp; Orari di Ricezione</span>
                 </h3>
                 <p className="text-[11px] text-slate-500 mt-0.5">
-                  Personalizza indirizzo, orari di apertura, foto del banchetto e stato live della bottega.
+                  Indirizzo, orari, telefono e descrizione sono quelli di <strong>Impostazioni</strong>: qui li vedi soltanto e scegli se mostrarli.
+                  Qui personalizzi foto del banchetto e testi di presentazione.
                 </p>
               </div>
 
@@ -656,10 +657,12 @@ export default function LiveShowcaseStudioPage() {
                 <textarea
                   rows={3}
                   value={config.atelier.description}
+                  readOnly
+                  title="Si modifica in Impostazioni"
                   onChange={(e) =>
                     setConfig({ ...config, atelier: { ...config.atelier, description: e.target.value } })
                   }
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs leading-relaxed"
+                  className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs bg-slate-100 text-slate-500 cursor-not-allowed"
                 />
               </div>
 
@@ -670,14 +673,27 @@ export default function LiveShowcaseStudioPage() {
                   <span>Posizione &amp; Indicazioni</span>
                 </h4>
                 <div>
+                  <label className="flex items-center gap-2 cursor-pointer text-[11px] font-bold text-slate-600 mb-2">
+                    <input
+                      type="checkbox"
+                      checked={config.atelier.showAddress !== false}
+                      onChange={(e) =>
+                        setConfig({ ...config, atelier: { ...config.atelier, showAddress: e.target.checked } })
+                      }
+                      className="shrink-0 w-5 h-5 rounded border-slate-300 text-amber-600 focus:ring-amber-500"
+                    />
+                    <span>Mostra l&apos;indirizzo in vetrina</span>
+                  </label>
                   <label className="text-[11px] font-bold text-slate-700 block mb-1">Indirizzo Completo Bottega</label>
                   <input
                     type="text"
                     value={config.atelier.addressText}
+                    readOnly
+                    title="Si modifica in Impostazioni"
                     onChange={(e) =>
                       setConfig({ ...config, atelier: { ...config.atelier, addressText: e.target.value } })
                     }
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs"
+                    className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs bg-slate-100 text-slate-500 cursor-not-allowed"
                   />
                 </div>
                 <div>
@@ -718,10 +734,12 @@ export default function LiveShowcaseStudioPage() {
                     <input
                       type="text"
                       value={config.atelier.hoursWeekdayText}
+                      readOnly
+                      title="Si modifica in Impostazioni"
                       onChange={(e) =>
                         setConfig({ ...config, atelier: { ...config.atelier, hoursWeekdayText: e.target.value } })
                       }
-                      className="w-full px-3 py-1.5 rounded-xl border border-slate-300 text-xs"
+                      className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs bg-slate-100 text-slate-500 cursor-not-allowed"
                     />
                   </div>
                   <div>
@@ -729,10 +747,12 @@ export default function LiveShowcaseStudioPage() {
                     <input
                       type="text"
                       value={config.atelier.hoursSaturdayText}
+                      readOnly
+                      title="Si modifica in Impostazioni"
                       onChange={(e) =>
                         setConfig({ ...config, atelier: { ...config.atelier, hoursSaturdayText: e.target.value } })
                       }
-                      className="w-full px-3 py-1.5 rounded-xl border border-slate-300 text-xs"
+                      className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs bg-slate-100 text-slate-500 cursor-not-allowed"
                     />
                   </div>
                   <div>
@@ -740,10 +760,12 @@ export default function LiveShowcaseStudioPage() {
                     <input
                       type="text"
                       value={config.atelier.hoursSundayText}
+                      readOnly
+                      title="Si modifica in Impostazioni"
                       onChange={(e) =>
                         setConfig({ ...config, atelier: { ...config.atelier, hoursSundayText: e.target.value } })
                       }
-                      className="w-full px-3 py-1.5 rounded-xl border border-slate-300 text-xs"
+                      className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs bg-slate-100 text-slate-500 cursor-not-allowed"
                     />
                   </div>
                 </div>
@@ -758,10 +780,12 @@ export default function LiveShowcaseStudioPage() {
                 <input
                   type="text"
                   value={config.atelier.whatsappButtonText}
+                  readOnly
+                  title="Si modifica in Impostazioni"
                   onChange={(e) =>
                     setConfig({ ...config, atelier: { ...config.atelier, whatsappButtonText: e.target.value } })
                   }
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs"
+                  className="w-full px-3 py-1.5 rounded-xl border border-slate-200 text-xs bg-slate-100 text-slate-500 cursor-not-allowed"
                 />
               </div>
             </div>

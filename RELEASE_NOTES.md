@@ -24,6 +24,11 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 - **Buono compleanno automatico**, una volta per cliente e per anno, con email solo a chi è iscritto e non disiscritto. Parte quando si apre la pagina Buoni o da `/api/cron/compleanni`.
 - **Premio punti → buono**: riscattando un premio si scalano i punti e nasce un buono intestato al cliente, nella stessa operazione.
 
+### 5. 🏪 Dati dell'Attività e Orari in un Solo Posto
+- **Una sola sede per i dati**: nome, sede, telefono, email, **descrizione** e **orari** della bottega si modificano solo in Impostazioni. Prima la pagina Orari mostrava un "salvato" che non salvava nulla e il pulsante di sincronizzazione non inviava niente a Google.
+- **Vetrina, Google, Facebook e Instagram** leggono gli stessi orari, con le chiusure e le ferie della pagina Orari; "Sincronizza" ora li invia davvero.
+- **Studio**: mostra questi dati in sola lettura (con l'interruttore "Mostra l'indirizzo") e non può più sovrascriverli; colori, logo e foto restano solo nello Studio.
+
 ---
 
 ## Novità della Versione 1.1.1 (Patch)
