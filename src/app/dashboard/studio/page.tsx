@@ -723,7 +723,7 @@ export default function LiveShowcaseStudioPage() {
                       onChange={(e) =>
                         setConfig({ ...config, atelier: { ...config.atelier, showHours: e.target.checked } })
                       }
-                      className="h-3.5 w-3.5 rounded border-slate-300 text-amber-600 focus:ring-amber-500"
+                      className="shrink-0 h-5 w-5 rounded border-slate-300 text-amber-600 focus:ring-amber-500"
                     />
                     <span>Mostra in Vetrina</span>
                   </label>
