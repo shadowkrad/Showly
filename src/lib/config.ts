@@ -71,6 +71,7 @@ export interface ShowlyConfig {
   };
   atelier: {
     showHours?: boolean;
+    showAddress?: boolean;
     tagLabel: string;
     heading: string;
     photoUrl: string;

@@ -273,12 +273,26 @@ export default function ShowlyImpostazioniPage() {
     setSyncingOmnichannel(true);
     setFeedback(null);
     try {
-      await handleSave();
+      const saved = await fetch("/api/config", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...config, fidelitySettings }),
+      });
+      if (!saved.ok) throw new Error("Salvataggio non riuscito");
+      const res = await fetch("/api/sync/channels", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || "Errore sincronizzazione canali");
       setLastSyncAt(new Date().toISOString());
       setFeedback({
         type: "success",
         text: "🚀 Orari bottega sincronizzati all'unisono su Google Maps, Meta (Facebook & IG) e WhatsApp Business!",
       });
+    } catch (err: any) {
+      setFeedback({ type: "error", text: err?.message || "Errore durante la sincronizzazione" });
     } finally {
       setSyncingOmnichannel(false);
     }
@@ -628,6 +642,23 @@ export default function ShowlyImpostazioniPage() {
                 </div>
               </div>
 
+              <div className="pt-2">
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Descrizione dell&apos;attività</label>
+                <textarea
+                  rows={4}
+                  value={config.atelier.description}
+                  onChange={(e) =>
+                    setConfig({ ...config, atelier: { ...config.atelier, description: e.target.value } })
+                  }
+                  placeholder="Racconta in poche righe chi siete e cosa vi rende speciali"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:outline-hidden resize-none"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">
+                  Nome, sede, telefono, email, descrizione e orari si modificano solo qui: la vetrina li legge da questa scheda
+                  (nello Studio scegli quali mostrare). Colori, logo e foto si cambiano solo nello Studio.
+                </p>
+              </div>
+
               {/* Orari di Apertura Bottega */}
               <div className="pt-4 border-t border-slate-200/80 space-y-4">
                 <div>
@@ -635,7 +666,9 @@ export default function ShowlyImpostazioniPage() {
                     ⏰ Orari di Apertura Bottega Fisica
                   </h3>
                   <p className="text-[11px] text-slate-500">
-                    Mostrati nella sezione &ldquo;La Bottega&rdquo; della vetrina online.
+                    Sono gli orari ufficiali: li trovi nella sezione &ldquo;La Bottega&rdquo; della vetrina e vengono inviati a Google, Facebook e
+                    Instagram (&ldquo;Chiuso&rdquo; per i giorni di chiusura, più ferie e festività della pagina Orari). Scrivili come
+                    &ldquo;Lun – Ven: 09:30 – 13:00 | 15:30 – 19:30&rdquo;.
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
