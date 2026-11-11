@@ -6,6 +6,10 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 
 ## Novità della Versione 1.1.3 (Patch)
 
+### 👤 CRM & Scheda Cliente Unificata in Stile Schedly con Gestione Punti e Invio Tessera
+- **Nuova scheda dettaglio cliente (`/dashboard/clienti/[id]`) e API `/api/clienti/[id]` (`GET`/`PUT`/`DELETE`)**: introdotta anche in Showly la pagina scheda cliente dedicata accessibile direttamente tramite il tasto **Scheda →** dall'elenco clienti, con colonna punti fedeltà in vista, anagrafica completa (sponsor, stato, compleanno, privacy GDPR), buoni attivi e prenotazioni camerino.
+- **Gestione punti nel profilo e invio manuale tessera (`ClienteFedeltaPanel`)**: consente di accreditare punti o riscattare premi direttamente dal profilo, aprire/copiare il link della tessera digitale (`/tessera/[token]`) e generare automaticamente il messaggio personalizzato da inviare manualmente tramite **WhatsApp (`wa.me`)** o **Email (`mailto:`)**.
+
 ### 📱 Icona dell'App e della Scheda Browser Sempre Nitida e Aggiornata
 - **Aggiornamento immediato al cambio logo/icona**: ogni volta che il titolare carica una nuova icona o un nuovo logo nello Studio/Impostazioni, l'indirizzo dell'icona nella pagina e nel manifesto PWA include automaticamente un codice di versione univoco (`&v=`). In questo modo browser e smartphone scaricano subito la nuova immagine senza restare bloccati sulla vecchia copia in memoria.
 - **Formato e dimensioni perfetti per ogni schermo (`sharp`)**: l'endpoint `/api/pwa-icon` e l'icona della tessera fedeltà digitale (`/tessera/[token]/icona`) convertono e ridimensionano sempre l'immagine in un **PNG quadrato reale** alle misure esatte richieste (`32×32`, `180×180`, `192×192`, `512×512`), partendo anche da immagini WebP, JPEG o SVG.
