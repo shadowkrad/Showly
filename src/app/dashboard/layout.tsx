@@ -21,6 +21,7 @@ import {
   Award,
 } from "lucide-react";
 import { TaaaacLogo, ShowlyModuleIcon } from "@/components/common/TaaaacLogo";
+import SidebarGruppi, { ElementoMenu } from "@/components/dashboard/SidebarGruppi";
 
 export default function DashboardLayout({
   children,
@@ -72,6 +73,19 @@ export default function DashboardLayout({
       label: "Live Showcase Studio",
       icon: Sliders,
     },
+  ];
+
+  const vocePer = (href: string) => baseNavLinks.find((l) => l.href === href)!;
+
+  // Le voci proprie del modulo sono raccolte in gruppi apribili: il menu mostra meno cose insieme
+  const baseNavVoci: ElementoMenu[] = [
+    vocePer("/dashboard"),
+    {
+      gruppo: "Showroom",
+      icona: Package,
+      voci: [vocePer("/dashboard/catalogo"), vocePer("/dashboard/cassaforte"), vocePer("/dashboard/studio")],
+    },
+    vocePer("/dashboard/clienti"),
   ];
 
   const isActive = (href: string) => {
@@ -139,25 +153,15 @@ export default function DashboardLayout({
             <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 pb-1">
               Gestione Showroom
             </p>
-            {baseNavLinks.map((link) => {
-              const active = isActive(link.href);
-              const Icon = link.icon;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
-                    active
-                      ? "bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/25"
-                      : "text-slate-300 hover:bg-slate-800 hover:text-white"
-                  }`}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
+            <SidebarGruppi
+              elementi={baseNavVoci}
+              isActive={isActive}
+              onNavigate={() => setMobileOpen(false)}
+              attivo="bg-amber-500 text-slate-950 font-bold"
+              inattivo="text-slate-300 hover:bg-slate-800 hover:text-white"
+              chevron="text-slate-400"
+              linea="border-slate-700"
+            />
 
             {/* Sezione Moduli Add-On Taaaac */}
             <div className="pt-4 pb-1">

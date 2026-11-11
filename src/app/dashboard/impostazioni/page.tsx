@@ -129,8 +129,45 @@ const TABS: TabItem[] = [
   },
 ];
 
+// Le sezioni delle impostazioni sono raccolte in pochi gruppi: meno voci, tutto più vicino
+interface GruppoImpostazioni {
+  id: string;
+  label: string;
+  shortDescription: string;
+  iconComponent: React.ElementType;
+  tabs: SettingsTab[];
+}
+
+const GRUPPI_BASE: { id: string; label: string; shortDescription: string; tabs: SettingsTab[] }[] = [
+  { id: "attivita", label: "Bottega", shortDescription: "Dati atelier, camerino 24h e listini", tabs: ["bottega", "camerino"] },
+  { id: "notifiche", label: "Notifiche", shortDescription: "Email e Telegram", tabs: ["email", "telegram"] },
+  { id: "fidelity", label: "Fidelity e buoni", shortDescription: "Club punti e biglietti", tabs: ["fidelity", "carta-grafica"] },
+  { id: "aspetto", label: "Aspetto e dominio", shortDescription: "Vetrina, foto e indirizzo", tabs: ["aspetto", "dominio"] },
+  { id: "dispositivi", label: "Dispositivi", shortDescription: "Smartphone e accessi", tabs: ["dispositivi"] },
+];
+
+function costruisciGruppi(): GruppoImpostazioni[] {
+  return GRUPPI_BASE.map((g) => {
+    const prima = TABS.find((t) => t.id === g.tabs[0]);
+    return {
+      id: g.id,
+      label: g.label,
+      shortDescription: g.shortDescription,
+      iconComponent: prima?.iconComponent || Settings,
+      tabs: [...g.tabs],
+    };
+  });
+}
+
 export default function ShowlyImpostazioniPage() {
-  const [activeTab, setActiveTab] = useState<SettingsTab>("bottega");
+  const gruppi = costruisciGruppi();
+  const [activeGroup, setActiveGroup] = useState<string>("attivita");
+  const gruppoAttivo = gruppi.find((g) => g.id === activeGroup) || gruppi[0];
+  const inGruppo = (t: SettingsTab) => gruppoAttivo.tabs.includes(t);
+  const titoloSezione = (t: SettingsTab) =>
+    gruppoAttivo.tabs.length > 1 ? (
+      <h2 className="text-base font-semibold text-slate-900 pt-2">{TABS.find((x) => x.id === t)?.label}</h2>
+    ) : null;
   const [studioSubTab, setStudioSubTab] = useState<StudioSubTab>("hero");
   const [simulatorMode, setSimulatorMode] = useState<"mobile" | "desktop">("mobile");
   const [config, setConfig] = useState<ShowlyConfig>(DEFAULT_SHOWLY_CONFIG);
@@ -331,12 +368,11 @@ export default function ShowlyImpostazioniPage() {
     }
   };
 
-  const currentTab = TABS.find((t) => t.id === activeTab);
-  const ActiveIcon = currentTab?.iconComponent || Store;
+  const ActiveIcon = gruppoAttivo.iconComponent || Store;
   const business = config.business || DEFAULT_SHOWLY_CONFIG.business!;
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto pb-12">
+    <div className="space-y-6 max-w-6xl mx-auto pb-24 lg:pb-12">
       {/* Intestazione Principale Unificata Taaaac */}
       <div className="bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -357,7 +393,7 @@ export default function ShowlyImpostazioniPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 active:scale-98 text-slate-950 font-bold text-sm rounded-xl shadow-xs shadow-amber-500/20 transition-all cursor-pointer disabled:opacity-60"
+          className="hidden lg:inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-amber-500 hover:bg-amber-600 active:scale-98 text-slate-950 font-bold text-sm rounded-xl shadow-xs shadow-amber-500/20 transition-all cursor-pointer disabled:opacity-60"
         >
           {saving ? (
             <>
@@ -370,6 +406,16 @@ export default function ShowlyImpostazioniPage() {
               <span>Salva Modifiche</span>
             </>
           )}
+        </button>
+      </div>
+
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 p-3 bg-white/95 border-t border-slate-200">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm rounded-xl disabled:opacity-60"
+        >
+          {saving ? "Salvataggio..." : "Salva modifiche"}
         </button>
       </div>
 
@@ -421,11 +467,11 @@ export default function ShowlyImpostazioniPage() {
               <div className="relative">
                 <select
                   id="settings-tab-select"
-                  value={activeTab}
-                  onChange={(e) => setActiveTab(e.target.value as SettingsTab)}
+                  value={gruppoAttivo.id}
+                  onChange={(e) => setActiveGroup(e.target.value)}
                   className="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-900 text-sm font-semibold py-2.5 pl-3.5 pr-10 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition cursor-pointer"
                 >
-                  {TABS.map((tab) => (
+                  {gruppi.map((tab) => (
                     <option key={tab.id} value={tab.id}>
                       {tab.label}
                     </option>
@@ -442,14 +488,14 @@ export default function ShowlyImpostazioniPage() {
               className="hidden lg:flex flex-col gap-1.5 pt-2"
               aria-label="Sezioni Impostazioni Showly"
             >
-              {TABS.map((tab) => {
-                const isActive = activeTab === tab.id;
+              {gruppi.map((tab) => {
+                const isActive = gruppoAttivo.id === tab.id;
                 const IconComp = tab.iconComponent;
                 return (
                   <button
                     key={tab.id}
                     type="button"
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => setActiveGroup(tab.id)}
                     className={`group flex items-center justify-between w-full p-2.5 sm:p-3 rounded-xl text-left transition-all cursor-pointer ${
                       isActive
                         ? "bg-amber-50 text-amber-950 font-semibold border border-amber-200/80 shadow-xs"
@@ -492,7 +538,7 @@ export default function ShowlyImpostazioniPage() {
         {/* COLONNA DESTRA: PANNELLO CONTENUTI */}
         <main className="lg:col-span-8 xl:col-span-9 space-y-6">
           {/* Header contestuale scheda attiva */}
-          {currentTab && (
+          {gruppoAttivo && (
             <div className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-xs flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center shrink-0">
@@ -500,16 +546,17 @@ export default function ShowlyImpostazioniPage() {
                 </div>
                 <div>
                   <h2 className="text-base sm:text-lg font-black text-slate-900">
-                    {currentTab.label}
+                    {gruppoAttivo.label}
                   </h2>
-                  <p className="text-xs text-slate-500 mt-0.5">{currentTab.description}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{gruppoAttivo.shortDescription}</p>
                 </div>
               </div>
             </div>
           )}
 
           {/* TAB 1: BOTTEGA & VETRINA */}
-          {activeTab === "bottega" && (
+          {inGruppo("bottega") && titoloSezione("bottega")}
+          {inGruppo("bottega") && (
             <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -856,7 +903,8 @@ export default function ShowlyImpostazioniPage() {
           )}
 
           {/* TAB 2: CAMERINO 24H & PREZZI */}
-          {activeTab === "camerino" && (
+          {inGruppo("camerino") && titoloSezione("camerino")}
+          {inGruppo("camerino") && (
             <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs space-y-6">
               <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-4">
                 <div className="flex items-center justify-between">
@@ -1005,7 +1053,8 @@ export default function ShowlyImpostazioniPage() {
           )}
 
           {/* TAB 3: DOMINIO & SSL */}
-          {activeTab === "dominio" && (
+          {inGruppo("dominio") && titoloSezione("dominio")}
+          {inGruppo("dominio") && (
             <div className="p-6 bg-gradient-to-br from-amber-50/60 to-slate-50 rounded-2xl border border-amber-200/80 shadow-xs space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200/50 pb-3">
                 <div className="flex items-center gap-2.5">
@@ -1064,7 +1113,8 @@ export default function ShowlyImpostazioniPage() {
           )}
 
           {/* TAB 4: EMAIL & NOTIFICHE */}
-          {activeTab === "email" && (
+          {inGruppo("email") && titoloSezione("email")}
+          {inGruppo("email") && (
             <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-2.5">
@@ -1156,14 +1206,16 @@ export default function ShowlyImpostazioniPage() {
           )}
 
           {/* TAB: TELEGRAM HUB & STAFF */}
-          {activeTab === "telegram" && (
+          {inGruppo("telegram") && titoloSezione("telegram")}
+          {inGruppo("telegram") && (
             <div className="space-y-6">
               <TelegramHubCard hub={telegramHub} />
             </div>
           )}
 
           {/* TAB: FIDELITY & CLUB */}
-          {activeTab === "fidelity" && (
+          {inGruppo("fidelity") && titoloSezione("fidelity")}
+          {inGruppo("fidelity") && (
             <div className="space-y-6">
               <FidelitySettingsPanel
                 data={fidelitySettings}
@@ -1185,14 +1237,16 @@ export default function ShowlyImpostazioniPage() {
           )}
 
           {/* TAB 5: DISPOSITIVI PWA & WEBAUTHN BIOMETRIA */}
-          {activeTab === "dispositivi" && (
+          {inGruppo("dispositivi") && titoloSezione("dispositivi")}
+          {inGruppo("dispositivi") && (
             <div className="space-y-6">
               <RegisteredDevicesCard />
             </div>
           )}
 
           {/* TAB 6: ASPETTO & BRAND (LIVE SHOWCASE VISUAL STUDIO INTEGRATO) */}
-          {activeTab === "aspetto" && (
+          {inGruppo("aspetto") && titoloSezione("aspetto")}
+          {inGruppo("aspetto") && (
             <div className="space-y-6">
               {/* Barra Sub-Tab Studio & Switch Mobile/Desktop */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -1780,7 +1834,8 @@ export default function ShowlyImpostazioniPage() {
               </div>
             </div>
           )}
-      {activeTab === "carta-grafica" && (
+      {inGruppo("carta-grafica") && titoloSezione("carta-grafica")}
+      {inGruppo("carta-grafica") && (
         <div className="space-y-6">
           <EditorCartaGrafica />
         </div>
