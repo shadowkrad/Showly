@@ -6,6 +6,10 @@ Tutte le modifiche, funzionalità e correzioni apportate al modulo **Showly** se
 
 ## Novità della Versione 1.1.3 (Patch)
 
+### 🧭 Menu Gestionale e Impostazioni Riorganizzati in Gruppi
+- **Menu laterale più ordinato (`SidebarGruppi.tsx`, `src/app/dashboard/layout.tsx`)**: le voci catalogo, cassaforte e vetrina studio sono raccolte nel gruppo apribile *Showroom* con apertura automatica in base alla pagina corrente.
+- **Impostazioni raggruppate per area e salvataggio comodo su mobile (`/dashboard/impostazioni`)**: le 9 sotto-schede sono riunite in 5 gruppi chiari (*Bottega*, *Notifiche*, *Fidelity e buoni*, *Aspetto e dominio*, *Dispositivi*) con barra fissa **Salva modifiche** in basso su smartphone.
+
 ### 👤 CRM & Scheda Cliente Unificata in Stile Schedly con Gestione Punti e Invio Tessera
 - **Nuova scheda dettaglio cliente (`/dashboard/clienti/[id]`) e API `/api/clienti/[id]` (`GET`/`PUT`/`DELETE`)**: introdotta anche in Showly la pagina scheda cliente dedicata accessibile direttamente tramite il tasto **Scheda →** dall'elenco clienti, con colonna punti fedeltà in vista, anagrafica completa (sponsor, stato, compleanno, privacy GDPR), buoni attivi e prenotazioni camerino.
 - **Gestione punti nel profilo e invio manuale tessera (`ClienteFedeltaPanel`)**: consente di accreditare punti o riscattare premi direttamente dal profilo, aprire/copiare il link della tessera digitale (`/tessera/[token]`) e generare automaticamente il messaggio personalizzato da inviare manualmente tramite **WhatsApp (`wa.me`)** o **Email (`mailto:`)**.
