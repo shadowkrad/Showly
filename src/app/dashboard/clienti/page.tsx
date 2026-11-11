@@ -614,15 +614,15 @@ export default function ClientiNewsletterDashboardPage() {
           <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs sm:text-sm">
-                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-semibold text-[11px] uppercase tracking-wider">
+                <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-semibold text-[11px]">
                   <tr>
-                    <th className="py-3.5 px-4">Cliente</th>
-                    <th className="py-3.5 px-4">Contatti</th>
-                    <th className="py-3.5 px-4">Sponsor / Provenienza</th>
-                    <th className="py-3.5 px-4">Stato</th>
-                    <th className="py-3.5 px-4">Punti Fedeltà</th>
-                    <th className="py-3.5 px-4">Data Iscrizione</th>
-                    <th className="py-3.5 px-4 text-right">Azioni</th>
+                    <th className="px-4 py-4 font-semibold">Cliente</th>
+                    <th className="px-4 py-4 font-semibold">Contatti</th>
+                    <th className="px-4 py-4 font-semibold">Sponsor / Provenienza</th>
+                    <th className="px-4 py-4 font-semibold">Stato</th>
+                    <th className="px-4 py-4 font-semibold">Punti Fedeltà</th>
+                    <th className="px-4 py-4 font-semibold">Data Iscrizione</th>
+                    <th className="px-4 py-4 font-semibold text-right">Azioni</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -635,18 +635,18 @@ export default function ClientiNewsletterDashboardPage() {
                   ) : (
                     clienti.map((c) => (
                       <tr key={c.id} className="hover:bg-slate-50/60 transition-colors">
-                        <td className="py-3.5 px-4 font-medium text-slate-900">
+                        <td className="px-4 py-5 align-middle font-medium text-slate-900">
                           <div className="font-semibold text-slate-900">
                             {c.nome || "Ospite Vetrina"}
                           </div>
                           {c.note && (
-                            <div className="text-[11px] text-slate-400 truncate max-w-xs">
+                            <div className="text-xs text-slate-400 truncate max-w-xs">
                               {c.note}
                             </div>
                           )}
                         </td>
 
-                        <td className="py-3.5 px-4 text-slate-600">
+                        <td className="px-4 py-5 align-middle text-slate-600">
                           {c.email && (
                             <div className="flex items-center gap-1.5 text-xs">
                               <Mail className="w-3.5 h-3.5 text-slate-400" />
@@ -676,13 +676,13 @@ export default function ClientiNewsletterDashboardPage() {
                           )}
                         </td>
 
-                        <td className="py-3.5 px-4">
+                        <td className="px-4 py-5 align-middle">
                           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-200">
                             <Tag className="w-3 h-3 text-amber-600" />
                             {c.sponsor || "Diretto"}
                           </span>
                           {c.campagna && (
-                            <div className="text-[11px] text-slate-400 mt-0.5">
+                            <div className="text-xs text-slate-400 mt-0.5">
                               {c.campagna}
                               {c.codiceReferral && (
                                 <span className="ml-1 font-mono text-slate-500">
@@ -693,15 +693,15 @@ export default function ClientiNewsletterDashboardPage() {
                           )}
                         </td>
 
-                        <td className="py-3.5 px-4">{getStatoBadge(c.stato)}</td>
+                        <td className="px-4 py-5 align-middle">{getStatoBadge(c.stato)}</td>
 
-                        <td className="py-3.5 px-4">
+                        <td className="px-4 py-5 align-middle">
                           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
                             {c.loyaltyPoints ?? 0} pt
                           </span>
                         </td>
 
-                        <td className="py-3.5 px-4 text-xs text-slate-500 font-mono">
+                        <td className="px-4 py-5 align-middle text-xs text-slate-500 font-mono">
                           {new Date(c.createdAt).toLocaleDateString("it-IT", {
                             day: "2-digit",
                             month: "short",
@@ -709,7 +709,7 @@ export default function ClientiNewsletterDashboardPage() {
                           })}
                         </td>
 
-                        <td className="py-3.5 px-4 text-right">
+                        <td className="px-4 py-5 align-middle text-right">
                           <div className="inline-flex items-center gap-1">
                             <Link
                               href={`/dashboard/clienti/${c.id}`}
