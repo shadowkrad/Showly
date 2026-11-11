@@ -620,6 +620,7 @@ export default function ClientiNewsletterDashboardPage() {
                     <th className="py-3.5 px-4">Contatti</th>
                     <th className="py-3.5 px-4">Sponsor / Provenienza</th>
                     <th className="py-3.5 px-4">Stato</th>
+                    <th className="py-3.5 px-4">Punti Fedeltà</th>
                     <th className="py-3.5 px-4">Data Iscrizione</th>
                     <th className="py-3.5 px-4 text-right">Azioni</th>
                   </tr>
@@ -627,7 +628,7 @@ export default function ClientiNewsletterDashboardPage() {
                 <tbody className="divide-y divide-slate-100">
                   {clienti.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="text-center py-12 text-slate-400">
+                      <td colSpan={7} className="text-center py-12 text-slate-400">
                         Nessun contatto trovato con i filtri correnti.
                       </td>
                     </tr>
@@ -694,6 +695,12 @@ export default function ClientiNewsletterDashboardPage() {
 
                         <td className="py-3.5 px-4">{getStatoBadge(c.stato)}</td>
 
+                        <td className="py-3.5 px-4">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                            {c.loyaltyPoints ?? 0} pt
+                          </span>
+                        </td>
+
                         <td className="py-3.5 px-4 text-xs text-slate-500 font-mono">
                           {new Date(c.createdAt).toLocaleDateString("it-IT", {
                             day: "2-digit",
@@ -704,6 +711,13 @@ export default function ClientiNewsletterDashboardPage() {
 
                         <td className="py-3.5 px-4 text-right">
                           <div className="inline-flex items-center gap-1">
+                            <Link
+                              href={`/dashboard/clienti/${c.id}`}
+                              className="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors mr-1"
+                              title="Apri scheda cliente e tessera punti"
+                            >
+                              Scheda →
+                            </Link>
                             {/* Invita in Cassaforte Privata */}
                             <Link
                               href={`/dashboard/cassaforte?nome=${encodeURIComponent(
