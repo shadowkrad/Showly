@@ -1,5 +1,6 @@
 "use client";
 
+import { numeroPerWhatsApp } from "@/lib/phone";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
@@ -177,7 +178,7 @@ export default function CassaforteManagerPage() {
 
   const handleSendWhatsApp = (inv: InvitoCassaforteDTO) => {
     const url = getVaultUrl(inv.token);
-    const cleanPhone = inv.whatsappDestinatario.replace(/[^0-9]/g, "");
+    const cleanPhone = numeroPerWhatsApp(inv.whatsappDestinatario);
     const pinLine = inv.pinAccesso
       ? `\n🔑 *Codice PIN Personale:* ${inv.pinAccesso}`
       : "";

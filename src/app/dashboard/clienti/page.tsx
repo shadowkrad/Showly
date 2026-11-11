@@ -1,5 +1,6 @@
 "use client";
 
+import { numeroPerWhatsApp } from "@/lib/phone";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
@@ -662,10 +663,7 @@ export default function ClientiNewsletterDashboardPage() {
                             <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-0.5">
                               <Phone className="w-3.5 h-3.5 text-slate-400" />
                               <a
-                                href={`https://wa.me/${c.telefono.replace(
-                                  /[^0-9]/g,
-                                  ""
-                                )}`}
+                                href={`https://wa.me/${numeroPerWhatsApp(c.telefono)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-emerald-700 hover:text-emerald-900 font-medium"

@@ -1,5 +1,6 @@
 "use client";
 
+import { numeroPerWhatsApp } from "@/lib/phone";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import BannerPreavvisoFestivita from "@/components/dashboard/BannerPreavvisoFestivita";
@@ -71,7 +72,7 @@ export default function DashboardOverviewPage() {
   };
 
   const handleOpenWhatsAppChat = (r: Reservation) => {
-    const cleanPhone = r.whatsapp.replace(/[^0-9]/g, "");
+    const cleanPhone = numeroPerWhatsApp(r.whatsapp);
     let msg = `Salve ${r.nomeCliente}! Ti contattiamo da Atelier Aurora in merito alla creazione "${r.titoloPezzo}" che hai riservato.`;
     if (r.stato === "PRONTO") {
       msg = `Salve ${r.nomeCliente}! La creazione "${r.titoloPezzo}" è pronta in bottega per la tua prova esclusiva. Ti aspettiamo!`;
