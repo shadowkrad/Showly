@@ -26,6 +26,9 @@ Le app web (PWA) già aggiunte in precedenza sulla schermata Home del telefono c
 
 ---
 
+### 🛠 Buoni Regalo
+- **Buoni e biglietti senza contatto**: se il buono non ha un cliente con email o cellulare, il modulo lo segnala, propone di creare la scheda cliente e, prima di emettere, chiede conferma (senza contatto il buono si può solo stampare). Nella consegna il pulsante WhatsApp mancante ora ha una spiegazione.
+
 ## Novità della Versione 1.1.2 (Patch)
 
 - Il pallino WhatsApp compare solo nella vetrina pubblica del sito: non piu' nelle pagine interne, nelle tessere e nei buoni dei clienti (prima bastava una pagina non prevista per vederlo).
